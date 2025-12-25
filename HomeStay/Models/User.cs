@@ -17,6 +17,8 @@ public partial class User
 
     public DateTime CreatedAt { get; set; }
 
+    public virtual ICollection<RoomsReview> RoomsReviews { get; set; } = new List<RoomsReview>();
+
     public virtual Staff? Staff { get; set; }
 
     public virtual UserProfile? UserProfile { get; set; }

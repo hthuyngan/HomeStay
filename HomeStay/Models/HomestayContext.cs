@@ -39,17 +39,20 @@ public partial class HomestayContext : DbContext
 
     public virtual DbSet<RoomType> RoomTypes { get; set; }
 
+    public virtual DbSet<RoomsReview> RoomsReviews { get; set; }
+
     public virtual DbSet<Staff> Staff { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AboutInfo>(entity =>
         {
-            entity.HasKey(e => e.AboutId).HasName("PK__AboutInf__717FC95C0E8B628E");
+            entity.HasKey(e => e.AboutId).HasName("PK__AboutInf__717FC95CFC6F2D05");
 
             entity.ToTable("AboutInfo");
 
@@ -60,7 +63,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Amenity>(entity =>
         {
-            entity.HasKey(e => e.AmenityId).HasName("PK__Amenitie__842AF52BFD413D8F");
+            entity.HasKey(e => e.AmenityId).HasName("PK__Amenitie__842AF52B49523917");
 
             entity.Property(e => e.AmenityId).HasColumnName("AmenityID");
             entity.Property(e => e.AmenityName).HasMaxLength(100);
@@ -75,7 +78,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Bookings__73951ACD19517545");
+            entity.HasKey(e => e.BookingId).HasName("PK__Bookings__73951ACD969F9BC9");
 
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.CreatedDate)
@@ -89,12 +92,12 @@ public partial class HomestayContext : DbContext
 
             entity.HasOne(d => d.Room).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.RoomId)
-                .HasConstraintName("FK__Bookings__RoomID__5AEE82B9");
+                .HasConstraintName("FK__Bookings__RoomID__5DCAEF64");
         });
 
         modelBuilder.Entity<ContactMessage>(entity =>
         {
-            entity.HasKey(e => e.ContactId).HasName("PK__ContactM__5C6625BBC3F62002");
+            entity.HasKey(e => e.ContactId).HasName("PK__ContactM__5C6625BBB91FDBCE");
 
             entity.Property(e => e.ContactId).HasColumnName("ContactID");
             entity.Property(e => e.CreatedDate)
@@ -108,7 +111,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.EventId).HasName("PK__Events__7944C87047F2B037");
+            entity.HasKey(e => e.EventId).HasName("PK__Events__7944C8707E5668D1");
 
             entity.Property(e => e.EventId).HasColumnName("EventID");
             entity.Property(e => e.Description).HasMaxLength(255);
@@ -118,7 +121,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Gallery>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__Gallery__7516F4EC278E7DC3");
+            entity.HasKey(e => e.ImageId).HasName("PK__Gallery__7516F4EC8C149463");
 
             entity.ToTable("Gallery");
 
@@ -132,7 +135,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<LocationInfo>(entity =>
         {
-            entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA477262D0C07");
+            entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA477B9E9A619");
 
             entity.ToTable("LocationInfo");
 
@@ -144,7 +147,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Menu>(entity =>
         {
-            entity.HasKey(e => e.MenuId).HasName("PK__Menu__C99ED2508770DD41");
+            entity.HasKey(e => e.MenuId).HasName("PK__Menu__C99ED2500C045DBF");
 
             entity.ToTable("Menu");
 
@@ -156,12 +159,12 @@ public partial class HomestayContext : DbContext
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
-                .HasConstraintName("FK__Menu__ParentID__4BAC3F29");
+                .HasConstraintName("FK__Menu__ParentID__5EBF139D");
         });
 
         modelBuilder.Entity<Offer>(entity =>
         {
-            entity.HasKey(e => e.OfferId).HasName("PK__Offers__8EBCF0B1B02F009E");
+            entity.HasKey(e => e.OfferId).HasName("PK__Offers__8EBCF0B14A0850E9");
 
             entity.Property(e => e.OfferId).HasColumnName("OfferID");
             entity.Property(e => e.Description).HasMaxLength(255);
@@ -171,7 +174,7 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<Room>(entity =>
         {
-            entity.HasKey(e => e.RoomId).HasName("PK__Rooms__3286391954720085");
+            entity.HasKey(e => e.RoomId).HasName("PK__Rooms__32863919054C7EFC");
 
             entity.Property(e => e.RoomId).HasColumnName("RoomID");
             entity.Property(e => e.Alias).HasMaxLength(100);
@@ -185,12 +188,12 @@ public partial class HomestayContext : DbContext
 
             entity.HasOne(d => d.RoomType).WithMany(p => p.Rooms)
                 .HasForeignKey(d => d.RoomTypeId)
-                .HasConstraintName("FK__Rooms__RoomTypeI__5165187F");
+                .HasConstraintName("FK__Rooms__RoomTypeI__619B8048");
         });
 
         modelBuilder.Entity<RoomAmenity>(entity =>
         {
-            entity.HasKey(e => e.RoomAmenityId).HasName("PK__RoomAmen__170ECC6C880857AD");
+            entity.HasKey(e => e.RoomAmenityId).HasName("PK__RoomAmen__170ECC6C9FC43F5B");
 
             entity.Property(e => e.RoomAmenityId).HasColumnName("RoomAmenityID");
             entity.Property(e => e.AmenityId).HasColumnName("AmenityID");
@@ -198,16 +201,16 @@ public partial class HomestayContext : DbContext
 
             entity.HasOne(d => d.Amenity).WithMany(p => p.RoomAmenities)
                 .HasForeignKey(d => d.AmenityId)
-                .HasConstraintName("FK__RoomAmeni__Ameni__571DF1D5");
+                .HasConstraintName("FK__RoomAmeni__Ameni__5FB337D6");
 
             entity.HasOne(d => d.Room).WithMany(p => p.RoomAmenities)
                 .HasForeignKey(d => d.RoomId)
-                .HasConstraintName("FK__RoomAmeni__RoomI__5629CD9C");
+                .HasConstraintName("FK__RoomAmeni__RoomI__60A75C0F");
         });
 
         modelBuilder.Entity<RoomType>(entity =>
         {
-            entity.HasKey(e => e.RoomTypeId).HasName("PK__RoomType__BCC89611F58532D9");
+            entity.HasKey(e => e.RoomTypeId).HasName("PK__RoomType__BCC89611FC9F908A");
 
             entity.Property(e => e.RoomTypeId).HasColumnName("RoomTypeID");
             entity.Property(e => e.Description).HasMaxLength(255);
@@ -215,11 +218,34 @@ public partial class HomestayContext : DbContext
             entity.Property(e => e.TypeName).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<RoomsReview>(entity =>
+        {
+            entity.HasKey(e => e.ReviewId).HasName("PK__RoomsRev__74BC79CED43A7419");
+
+            entity.ToTable("RoomsReview");
+
+            entity.Property(e => e.Comment).HasMaxLength(1000);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            entity.HasOne(d => d.Room).WithMany(p => p.RoomsReviews)
+                .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RoomsReview_Room");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RoomsReviews)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RoomsReview_User");
+        });
+
         modelBuilder.Entity<Staff>(entity =>
         {
-            entity.HasKey(e => e.StaffId).HasName("PK__Staff__96D4AB1700019D08");
+            entity.HasKey(e => e.StaffId).HasName("PK__Staff__96D4AB17E01A038C");
 
-            entity.HasIndex(e => e.UserId, "UQ__Staff__1788CC4D2EAEE7E6").IsUnique();
+            entity.HasIndex(e => e.UserId, "UQ__Staff__1788CC4D029BFFA2").IsUnique();
 
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FullName).HasMaxLength(100);
@@ -235,9 +261,9 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CC1FB2711");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CB925461F");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E46AAC6797").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E428B4A87F").IsUnique();
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -249,11 +275,11 @@ public partial class HomestayContext : DbContext
 
         modelBuilder.Entity<UserProfile>(entity =>
         {
-            entity.HasKey(e => e.ProfileId).HasName("PK__UserProf__290C88E419383852");
+            entity.HasKey(e => e.ProfileId).HasName("PK__UserProf__290C88E4808FB1D5");
 
             entity.ToTable("UserProfile");
 
-            entity.HasIndex(e => e.UserId, "UQ__UserProf__1788CC4DFF3BAFA1").IsUnique();
+            entity.HasIndex(e => e.UserId, "UQ__UserProf__1788CC4D173149D6").IsUnique();
 
             entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(100);
