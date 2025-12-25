@@ -61,6 +61,53 @@
                 <nav id="navmenu" class="navmenu">
                     <ul>
                         @await Component.InvokeAsync("MenuTop")
+                        @if (Context.Session.GetInt32("UserId") != null)
+                        {
+                            <li class="nav-item dropdown user-dropdown">
+                                <a href="#" class="nav-link d-flex align-items-center user-toggle"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+
+                                    <!-- Avatar -->
+                                    <div class="user-avatar me-2">
+                                        <span>
+                                            @Context.Session.GetString("Username")?.Substring(0, 1).ToUpper()
+                                        </span>
+                                    </div>
+
+                                    <!-- Username -->
+                                    <span class="user-name">
+                                        @Context.Session.GetString("Username")
+                                    </span>
+
+                                    <i class="bi bi-chevron-down ms-2"></i>
+                                </a>
+
+                                <!-- Dropdown -->
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                           asp-controller="Account" asp-action="Profile">
+                                            <i class="bi bi-person-circle me-2"></i>Quản lý tài khoản
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                           asp-controller="Account" asp-action="Logout">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary px-3">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
+                                </a>
+                            </li>
+                        }
+
 
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
