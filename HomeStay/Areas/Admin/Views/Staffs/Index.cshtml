@@ -1,0 +1,62 @@
+﻿@model IEnumerable<HomeStay.Models.Staff>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:131px;margin-top: 50px;width: 86%;">
+    <div class="container-fluid pt-4 px-4" style="width:105%; padding-bottom: 100px;">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Quản lý nhân viên</h6>
+                <a asp-action="Create" class="btn btn-success">Thêm mới</a>
+            </div>
+            <div class="no-border-box table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên nhân viên</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Số điện thoại</th>
+                            <th scope="col">Vị trí</th>
+                            <th scope="col">Lương</th>
+                            <th scope="col">Ngày tuyển dụng</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col" style="width: 110px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@(i++)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Position)</td>
+                                <td>@item.Salary</td>
+                                <td>@Html.DisplayFor(modelItem => item.HireDate)</td>
+
+                                <td>
+                                    @(item.Status == 1 ? "Còn làm" :
+                                        item.Status == 0 ? "Nghỉ việc" : "Không xác định")
+                                </td>
+
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.StaffId" class="btn btn-primary btn-sm">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@item.StaffId" class="btn btn-danger btn-sm">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

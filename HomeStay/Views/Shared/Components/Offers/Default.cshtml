@@ -1,0 +1,81 @@
+﻿@model IEnumerable<HomeStay.Models.Offer>
+
+<section id="offer-cards" class="offer-cards section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Offers</span>
+        <h2>Offers</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-4">
+            @foreach (var item in Model.Take(3)){
+                <div class="col-lg-4 col-md-6">
+                    <div class="offer-card" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="offer-badge">
+                            <span class="discount">25% OFF</span>
+                        </div>
+                        <div class="offer-image">
+                            <img src="~/img/hotel/showcase-3.webp" alt="Weekend Getaway" class="img-fluid">
+                        </div>
+                        <div class="offer-content">
+                            <h3>@item.Title</h3>
+                            <p>@item.Description</p>
+                            <div class="offer-details">
+                                <div class="price-info">
+                                    <span class="original-price">$299</span>
+                                    <span class="offer-price">@item.DiscountPercent</span>
+                                    <span class="per-night">đêm</span>
+                                </div>
+                                <div class="validity">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Từ ngày @item.StartDate đến ngày @item.EndDate</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn-book">Đặt ngay</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="offer-banner" data-aos="fade-up" data-aos-delay="500">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <div class="banner-content">
+                                <h2>Limited Time Offer</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <div class="banner-action">
+                                <div class="countdown" data-count="2025/12/15">
+                                    <div>
+                                        <span class="count-days"></span>
+                                        <label>Days</label>
+                                    </div>
+                                    <div>
+                                        <span class="count-hours"></span>
+                                        <label>Hours</label>
+                                    </div>
+                                    <div>
+                                        <span class="count-minutes"></span>
+                                        <label>Minutes</label>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn-cta">Claim Offer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section><!-- /Offer Cards Section -->

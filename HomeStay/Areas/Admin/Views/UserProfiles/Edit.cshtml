@@ -1,0 +1,81 @@
+﻿@model HomeStay.Models.UserProfile
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:142px;width:76%;margin-top:50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light rounded p-4 shadow-sm">
+
+            <h4 class="mb-4 text-primary">Sửa thông tin người dùng</h4>
+
+            <form asp-area="Admin" asp-controller="UserProfiles"
+                   asp-action="Edit"
+                   asp-route-id="@Model.ProfileId"
+                   method="post">
+                
+                <input type="hidden" asp-for="ProfileId" />
+                <input type="hidden" asp-for="UserId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Họ và tên</label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Địa chỉ</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <select asp-for="Gender" class="form-select">
+                            <option value="">-- Chọn --</option>
+                            <option value="1">Nam</option>
+                            <option value="2">Nữ</option>
+                            <option value="3">Khác</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày sinh</label>
+                        <input asp-for="BirthDate" type="date" class="form-control" />
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                        Cập nhật
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">
+                        Quay lại
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

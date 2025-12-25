@@ -1,0 +1,43 @@
+﻿@model IEnumerable<HomeStay.Models.Amenity>
+
+<section id="amenities-cards" class="amenities-cards section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Amenities</span>
+        <h2>Amenities</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-5">
+            @foreach (var item in Model.Take(3)) {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="facility-card">
+                        <div class="facility-image">
+                            <img src="~/img/hotel/amenities-1.webp" alt="Wireless Internet" class="img-fluid">
+                            <div class="facility-overlay">
+                                <i class="bi bi-wifi"></i>
+                            </div>
+                        </div>
+                        <div class="facility-info">
+                            <h4>@item.AmenityName</h4>
+                            <p>@item.Description</p>
+                            <div class="facility-features">
+                                <span><i class="bi bi-check-circle"></i> 24/7 Available</span>
+                                <span><i class="bi bi-check-circle"></i> @item.Icon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Facility Card -->
+            }
+            
+          
+        </div>
+
+    </div>
+
+</section><!-- /Amenities Cards Section -->

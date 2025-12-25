@@ -1,0 +1,77 @@
+﻿@model HomeStay.Models.Staff
+
+@{
+    ViewData["Title"] = "Xóa nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:157px;width: 92%;margin-top: 50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4" style="width: 200%;">
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-light rounded h-100 p-4 shadow-sm">
+
+                    <h4 class="mb-3 text-danger">Xóa nhân viên</h4>
+                    <h6 class="text-warning">
+                        Bạn có chắc chắn muốn xóa nhân viên này không?
+                        Hành động này <strong>không thể hoàn tác</strong>!
+                    </h6>
+                    <hr />
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Họ tên</dt>
+                        <dd class="col-sm-8">@Model.FullName</dd>
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Số điện thoại</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+
+                        <dt class="col-sm-4">Chức vụ</dt>
+                        <dd class="col-sm-8">@Model.Position</dd>
+
+                        <dt class="col-sm-4">Lương</dt>
+                        <dd class="col-sm-8">
+                            @Model.Salary?.ToString("N0") VNĐ
+                        </dd>
+
+                        <dt class="col-sm-4">Ngày vào làm</dt>
+                        <dd class="col-sm-8">
+                            @Model.HireDate?.ToString("dd/MM/yyyy")
+                        </dd>
+
+                        <dt class="col-sm-4">Trạng thái</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Status == 1)
+                            {
+                                <span class="badge bg-success">Đang làm</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Nghỉ việc</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="StaffId" />
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit"
+                                    class="btn btn-danger btn-lg rounded-pill shadow border-0">
+                                <i class="fas fa-trash-alt"></i> Xóa nhân viên
+                            </button>
+
+                            <a asp-action="Index"
+                               class="btn btn-secondary btn-lg rounded-pill shadow border-0">
+                                <i class="fas fa-undo"></i> Quay lại
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

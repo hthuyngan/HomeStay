@@ -1,0 +1,155 @@
+﻿@model IEnumerable<HomeStay.Models.Room>
+
+
+<section id="rooms-showcase" class="rooms-showcase section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Rooms</span>
+        <h2>Rooms</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-5">
+            <div class="col-xl-8" data-aos="zoom-in" data-aos-delay="200">
+                <div class="hero-room-showcase">
+                    <div class="showcase-image-container">
+                        <img src="~/img/hotel/room-14.webp" alt="Grand Presidential Suite" class="img-fluid">
+                        <div class="room-category-badge">
+                            <span>Presidential</span>
+                        </div>
+                        <div class="room-details-overlay">
+                            <div class="room-specs">
+                                <span class="spec-item">
+                                    <i class="bi bi-people"></i>
+                                    <span>6 Guests</span>
+                                </span>
+                                <span class="spec-item">
+                                    <i class="bi bi-house"></i>
+                                    <span>180m²</span>
+                                </span>
+                                <span class="spec-item">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>Top Floor</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="showcase-content">
+                        <div class="room-title-section">
+                            <h2>Grand Presidential Suite</h2>
+                            <div class="room-rating">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <span class="rating-text">5.0 Excellence</span>
+                            </div>
+                        </div>
+                        <p class="room-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        <div class="amenities-grid">
+                            <div class="amenity-item">
+                                <i class="bi bi-wifi"></i>
+                                <span>Premium WiFi</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="bi bi-tv"></i>
+                                <span>Smart TV</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="bi bi-cup-hot"></i>
+                                <span>Coffee Bar</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="bi bi-snow"></i>
+                                <span>Climate Control</span>
+                            </div>
+                        </div>
+                        <div class="booking-section">
+                            <div class="price-display">
+                                <span class="currency">$</span>
+                                <span class="amount">649</span>
+                                <span class="period">per night</span>
+                            </div>
+                            <a href="room-details.html" class="primary-booking-btn">Reserve Suite</a>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End Hero Room -->
+
+            <div class="col-xl-4">
+                <div class="room-list-container">
+                  @foreach( var item in Model.Take(3))
+                  {
+                        string sUrl = $"/room/{item.Alias}-{item.RoomId}.html";
+                        <div class="standard-room-card" data-aos="slide-left" data-aos-delay="250">
+                            <div class="card-image">
+                                <img src="~/img/hotel/room-6.webp" alt="Executive Room" class="img-fluid">
+                                <div class="view-link">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <a href="@sUrl">@item.RoomName</a>
+                                <p>@item.Description</p>
+                                <div class="features-list">
+                                    <span><i class="bi bi-briefcase"></i>Work Space</span>
+                                    <span><i class="bi bi-building"></i>City Views</span>
+                                </div>
+                                <div class="booking-row">
+                                    <div class="price">@item.Price $<small>/đêm</small></div>
+                                    <a href="room-details.html" class="book-link">Đặt</a>
+                                </div>
+                            </div>
+                        </div>
+                  }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mt-6">
+            @foreach (var item in Model.Take(4))
+            {
+                string sUrl = $"/room/{item.Alias}-{item.RoomId}.html";
+                <div class="col-lg-3 col-sm-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="minimal-room-card">
+                        <div class="room-image">
+                            <img src="~/img/hotel/room-1.webp" alt="Classic Room" class="img-fluid">
+                            <div class="hover-overlay">
+                                <a href="@sUrl" class="view-room">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="room-summary">
+                            <a href="@sUrl">@item.RoomName</a>
+                            <div class="price-tag">@item.Price đ<span>/đêm</span></div>
+                            <div class="basic-amenities">
+                                <i class="bi bi-wifi"></i>
+                                <i class="bi bi-tv"></i>
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Minimal Room -->
+            }
+        </div>
+
+        <div class="text-center" data-aos="fade-up" data-aos-delay="600">
+            <a href="rooms.html" class="explore-all-link">
+                <span>Explore All Accommodations</span>
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+</section><!-- /Rooms Showcase Section -->

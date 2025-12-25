@@ -1,0 +1,45 @@
+﻿@model IEnumerable<HomeStay.Models.Event>
+<section id="events-cards" class="events-cards section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Events</span>
+        <h2>Events</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-4">
+
+          @foreach(var item in Model){
+                <div class="col-lg-4 col-md-6">
+                    <div class="event-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="event-header">
+                            <div class="event-icon">
+                                <i class="bi bi-heart-fill"></i>
+                            </div>
+                            <img src="~/img/hotel/event-1.webp" alt="Wedding Celebrations" class="img-fluid">
+                        </div>
+                        <div class="event-content">
+                            <h4>@item.Title</h4>
+                            <p>@item.Description</p>
+                            <div class="event-features">
+                                <span class="feature-item"><i class="bi bi-check-circle"></i> Premium Venues</span>
+                                <span class="feature-item"><i class="bi bi-check-circle"></i> Full Catering</span>
+                            </div>
+                            <a href="hotel-events.html" class="event-link">
+                                Khám phá chi tiết <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Event Item -->
+          }
+
+        </div>
+
+    </div>
+
+</section><!-- /Events Cards Section -->

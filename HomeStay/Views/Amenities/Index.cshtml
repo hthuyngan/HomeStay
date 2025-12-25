@@ -1,0 +1,133 @@
+﻿@model IEnumerable<HomeStay.Models.Amenity>
+
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Amenities</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li class="current">Tiện nghi</li>
+                </ol>
+            </nav>
+        </div>
+    </div><!-- End Page Title -->
+    <!-- Amenities Section -->
+    <section id="amenities" class="amenities section">
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="row gy-4">
+
+             @foreach(var item in Model){
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="amenity-card">
+                            <div class="amenity-image">
+                                <img src="~/img/hotel/amenities-1.webp" alt="Rooftop Pool" class="img-fluid">
+                            </div>
+                            <div class="amenity-content">
+                                <h3>@item.AmenityName</h3>
+                                <p> @item.Description</p>
+                                <ul class="amenity-features">
+                                    <li><i class="bi bi-clock"></i> @item.OpenTime</li>
+                                    <li><i class="bi bi-droplet"></i> @item.Feature1</li>
+                                    <li><i class="bi bi-cup-hot"></i>@item.Feature2</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Amenity Card -->
+             }
+
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12" data-aos="fade-up" data-aos-delay="600">
+                    <div class="amenities-grid">
+                        <h3 class="text-center mb-4">Additional Hotel Services</h3>
+                        <div class="row g-4">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-wifi"></i>
+                                    </div>
+                                    <h4>Free Wi-Fi</h4>
+                                    <p>High-speed internet throughout the property</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-car-front"></i>
+                                    </div>
+                                    <h4>Valet Parking</h4>
+                                    <p>Complimentary valet service for all guests</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-airplane"></i>
+                                    </div>
+                                    <h4>Airport Shuttle</h4>
+                                    <p>Scheduled transfers to major airports</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-headset"></i>
+                                    </div>
+                                    <h4>Concierge</h4>
+                                    <p>24/7 assistance for reservations and tours</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-bell"></i>
+                                    </div>
+                                    <h4>Room Service</h4>
+                                    <p>Gourmet dining delivered to your room</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <h4>Safe Deposit</h4>
+                                    <p>Secure storage for your valuables</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-translate"></i>
+                                    </div>
+                                    <h4>Multilingual Staff</h4>
+                                    <p>Service in English, Spanish, French, and more</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="bi bi-heart-pulse"></i>
+                                    </div>
+                                    <h4>Pet Friendly</h4>
+                                    <p>Welcome amenities for your furry friends</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section><!-- /Amenities Section -->
+
+</main>

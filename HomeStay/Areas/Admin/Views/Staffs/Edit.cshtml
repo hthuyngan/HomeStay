@@ -1,0 +1,72 @@
+﻿@model HomeStay.Models.Staff
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:142px;width:76%;margin-top:50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light rounded p-4 shadow-sm">
+            <h4 class="mb-4 text-primary">Sửa thông tin nhân viên</h4>
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="StaffId" />
+                <input type="hidden" asp-for="UserId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Họ và tên</label>
+                        <input asp-for="FullName" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Chức vụ</label>
+                        <input asp-for="Position" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Lương</label>
+                        <input asp-for="Salary" class="form-control" type="number" step="1000" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày vào làm</label>
+                        <input asp-for="HireDate" class="form-control" type="date" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Trạng thái</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="1">Còn làm</option>
+                            <option value="0">Nghỉ việc</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                        Cập nhật
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">
+                        Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

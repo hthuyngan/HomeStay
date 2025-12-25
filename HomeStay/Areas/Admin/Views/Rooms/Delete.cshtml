@@ -1,0 +1,79 @@
+﻿@model HomeStay.Models.Room
+
+@{
+    ViewData["Title"] = "Xóa phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:157px;width: 92%;margin-top: 50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4" style="width: 200%;">
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-light rounded h-100 p-4 shadow-sm">
+
+                    <h4 class="mb-3 text-danger">Xóa phòng</h4>
+                    <h6 class="text-warning">
+                        Bạn có chắc chắn muốn xóa phòng này không?
+                        Hành động này <strong>không thể hoàn tác</strong>!
+                    </h6>
+                    <hr />
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Tên phòng</dt>
+                        <dd class="col-sm-8">@Model.RoomName</dd>
+
+                        <dt class="col-sm-4">Loại phòng</dt>
+                        <dd class="col-sm-8">@Model.RoomType?.TypeName</dd>
+
+                        <dt class="col-sm-4">Giá</dt>
+                        <dd class="col-sm-8">
+                            @Model.Price?.ToString("N0") VNĐ
+                        </dd>
+
+                        <dt class="col-sm-4">Số người</dt>
+                        <dd class="col-sm-8">@Model.Capacity người</dd>
+
+                        <dt class="col-sm-4">Diện tích</dt>
+                        <dd class="col-sm-8">@Model.Size</dd>
+
+                        <dt class="col-sm-4">Trạng thái</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Status == 1)
+                            {
+                                <span class="badge bg-success">Còn phòng</span>
+                            }
+                            else if (Model.Status == 2)
+                            {
+                                <span class="badge bg-danger">Đã đặt</span>
+                            }
+                            else if (Model.Status == 3)
+                            {
+                                <span class="badge bg-warning text-dark">Bảo trì</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Mô tả</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="RoomId" />
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit"
+                                    class="btn btn-danger btn-lg rounded-pill shadow border-0">
+                                <i class="fas fa-trash-alt"></i> Xóa phòng
+                            </button>
+
+                            <a asp-action="Index"
+                               class="btn btn-secondary btn-lg rounded-pill shadow border-0">
+                                <i class="fas fa-undo"></i> Quay lại
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

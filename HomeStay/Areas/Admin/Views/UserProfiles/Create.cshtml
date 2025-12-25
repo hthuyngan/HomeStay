@@ -1,0 +1,76 @@
+﻿@model HomeStay.ViewModels.UserProfileCreateVM
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:167px;margin-top:50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light rounded p-4">
+
+            <h4 class="mb-4 text-primary">Thêm người dùng</h4>
+
+            <form asp-action="Create" method="post">
+                <div class="row g-3">
+
+                    <!-- USER -->
+                    <div class="col-md-6">
+                        <label>Tên đăng nhập</label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Mật khẩu</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <!-- PROFILE -->
+                    <div class="col-md-6">
+                        <label>Họ tên</label>
+                        <input asp-for="FullName" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Số điện thoại</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Địa chỉ</label>
+                        <input asp-for="Address" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Giới tính</label>
+                        <select asp-for="Gender" class="form-select">
+                            <option value="">-- Chọn --</option>
+                            <option value="1">Nam</option>
+                            <option value="2">Nữ</option>
+                            <option value="3">Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Ngày sinh</label>
+                        <input asp-for="BirthDate" type="date" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Thêm mới</button>
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

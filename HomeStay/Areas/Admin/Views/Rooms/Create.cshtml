@@ -1,0 +1,82 @@
+﻿@model HomeStay.Models.Room
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:167px;margin-top: 50px;">
+    <div class="container-fluid pt-4 px-4" style="width:105%;">
+        <div class="bg-light rounded p-4">
+            <h4 class="mb-4 text-primary">Thêm phòng</h4>
+            <form asp-action="Create" method="post">
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label asp-for="RoomName" class="form-label">Tên phòng</label>
+                        <input asp-for="RoomName" class="form-control" />
+                        <span asp-validation-for="RoomName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Alias" class="form-label">Alias</label>
+                        <input asp-for="Alias" class="form-control" />
+                        <span asp-validation-for="Alias" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="RoomTypeId" class="form-label">Loại phòng</label>
+                        <select asp-for="RoomTypeId" class="form-select" asp-items="ViewBag.RoomTypeId"></select>
+                        <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="Price" class="form-label">Giá</label>
+                        <input asp-for="Price" class="form-control" type="number" step="1000" min="0" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label asp-for="Size" class="form-label">Diện tích</label>
+                        <input asp-for="Size" class="form-control" type="number" step="1000" min="0" />
+                        <span asp-validation-for="Size" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="Capacity" class="form-label">Số người tối đa</label>
+                        <select asp-for="Capacity" class="form-select">
+                            <option value="1">1 người</option>
+                            <option value="2">2 người</option>
+                            <option value="4">4 người</option>
+                            <option value="6">6 người</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Image" class="form-label">Ảnh</label>
+                        <input asp-for="Image" class="form-control" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="Description" class="form-label">Mô tả</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>  
+
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Status" class="form-label">Trạng thái</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="1">Hoạt động</option>
+                        <option value="0">Tạm khóa</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Thêm mới</button>
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

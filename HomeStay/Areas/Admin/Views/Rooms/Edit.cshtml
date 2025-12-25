@@ -1,0 +1,74 @@
+﻿@model HomeStay.Models.Room
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:142px;width: 76%;margin-top: 50px;">
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4" style="width: 180%;">
+            <div class="col-sm-12 col-xl-8" style="padding-bottom: 100px;">
+                <div class="bg-light rounded h-100 p-4 shadow-sm">
+                    <h4 class="mb-4 text-primary">Sửa thông tin phòng</h4>
+
+                    <form asp-action="Edit" method="post">
+                      
+                        <input type="hidden" asp-for="RoomId" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tên phòng</label>
+                            <input asp-for="RoomName" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Loại phòng</label>
+                            <select asp-for="RoomTypeId" class="form-select" asp-items="ViewBag.RoomTypeId"></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giá</label>
+                            <input asp-for="Price" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Diện tích</label>
+                            <input asp-for="Size" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số người tối đa</label>
+                            <input asp-for="Capacity" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Alias</label>
+                            <input asp-for="Alias" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mô tả</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="1">Còn trống</option>
+                                <option value="2">Đã đặt</option>
+                                <option value="3">Bảo trì</option>
+                            </select>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success px-4">Cập nhật</button>
+                            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">Quay lại</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

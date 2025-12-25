@@ -1,0 +1,63 @@
+﻿@model IEnumerable<HomeStay.Models.UserProfile>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content" style="margin-left:131px;margin-top: 50px;width: 86%;">
+    <div class="container-fluid pt-4 px-4" style="padding-bottom: 100px;">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Quản lý người dùng</h6>
+                <a asp-action="Create" class="btn btn-success">Thêm người dùng</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="text-dark">
+                        <tr>
+                            <th>STT</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>SĐT</th>
+                            <th>Địa chỉ</th>
+                            <th>Giới tính</th>
+                            <th width="120">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@(i++)</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Email</td>
+                                <td>@item.Phone</td>
+                                <td>@item.Address</td>
+                                <td>
+                                    @(item.Gender == 1 ? "Nam" :
+                                      item.Gender == 2 ? "Nữ" : "Khác")
+                                </td>
+                                <td>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.ProfileId"
+                                       class="btn btn-primary btn-sm">
+                                        Sửa
+                                    </a>
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.ProfileId"
+                                       class="btn btn-danger btn-sm">
+                                        Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
