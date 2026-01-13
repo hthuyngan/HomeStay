@@ -1,0 +1,454 @@
+﻿@model HomeStay.Models.CreateOrderViewModel
+
+@{
+    ViewData["Title"] = "Thanh toán";
+    var total = Model.CartItems.Sum(c => c.Subtotal);
+}
+
+<main class="main">
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Thanh toán</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li><a asp-controller="FoodOrder" asp-action="Cart">Giỏ hàng</a></li>
+                    <li class="current">Thanh toán</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="checkout-section section">
+        <div class="container">
+            <form asp-action="Checkout" asp-controller="FoodOrder" method="post">
+                @Html.AntiForgeryToken()
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="checkout-form">
+                            <h4 class="mb-4"><i class="bi bi-person-circle"></i> Thông tin khách hàng</h4>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="CustomerName" class="form-label">Họ và tên *</label>
+                                    <input asp-for="CustomerName" class="form-control" placeholder="Nhập họ tên" required>
+                                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Phone" class="form-label">Số điện thoại *</label>
+                                    <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại" required>
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email (tùy chọn)">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h4 class="mb-4"><i class="bi bi-box-seam"></i> Hình thức đặt món</h4>
+
+                            <div class="order-types mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" asp-for="OrderType" id="dineIn" value="0">
+                                        <label class="order-type-card" for="dineIn">
+                                            <i class="bi bi-shop"></i>
+                                            <span>Tại chỗ</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" asp-for="OrderType" id="takeAway" value="1" checked>
+                                        <label class="order-type-card" for="takeAway">
+                                            <i class="bi bi-bag"></i>
+                                            <span>Mang về</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" asp-for="OrderType" id="delivery" value="2">
+                                        <label class="order-type-card" for="delivery">
+                                            <i class="bi bi-truck"></i>
+                                            <span>Giao hàng</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tableNumberSection" class="mb-3" style="display: none;">
+                                <label asp-for="TableNumber" class="form-label">Số bàn *</label>
+                                <input asp-for="TableNumber" type="number" class="form-control"
+                                       placeholder="Nhập số bàn (1-50)" min="1" max="50">
+                                <span asp-validation-for="TableNumber" class="text-danger"></span>
+                            </div>
+
+                            <div id="deliverySection" style="display: none;">
+                                <div class="mb-3">
+                                    <label asp-for="DeliveryAddress" class="form-label">Địa chỉ giao hàng *</label>
+                                    <textarea asp-for="DeliveryAddress" class="form-control" rows="3"
+                                              placeholder="Nhập địa chỉ chi tiết"></textarea>
+                                    <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="DeliveryTime" class="form-label">Thời gian giao hàng</label>
+                                    <input asp-for="DeliveryTime" type="datetime-local" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Note" class="form-label">Ghi chú</label>
+                                <textarea asp-for="Note" class="form-control" rows="3"
+                                          placeholder="Ghi chú đặc biệt cho đơn hàng (tùy chọn)"></textarea>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h4 class="mb-4"><i class="bi bi-credit-card"></i> Phương thức thanh toán</h4>
+
+                            <div class="payment-methods-selection">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod"
+                                           id="cash" value="0" checked>
+                                    <label class="form-check-label payment-option" for="cash">
+                                        <i class="bi bi-cash-coin"></i>
+                                        <div>
+                                            <strong>Tiền mặt</strong>
+                                            <small class="d-block text-muted">Thanh toán khi nhận hàng</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod"
+                                           id="bank" value="1">
+                                    <label class="form-check-label payment-option" for="bank">
+                                        <i class="bi bi-bank"></i>
+                                        <div>
+                                            <strong>Chuyển khoản</strong>
+                                            <small class="d-block text-muted">Chuyển khoản ngân hàng</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod"
+                                           id="card" value="2">
+                                    <label class="form-check-label payment-option" for="card">
+                                        <i class="bi bi-credit-card"></i>
+                                        <div>
+                                            <strong>Thẻ</strong>
+                                            <small class="d-block text-muted">Thanh toán bằng thẻ tín dụng/ghi nợ</small>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="order-summary">
+                            <h4 class="mb-4">Đơn hàng của bạn</h4>
+
+                            <div class="order-items">
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <div class="order-item">
+                                        <div class="d-flex align-items-center mb-2">
+                                            @if (!string.IsNullOrEmpty(item.Image))
+                                            {
+                                                <img src="@item.Image" alt="@item.Name" class="order-item-img">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/default-food.jpg" alt="@item.Name" class="order-item-img">
+                                            }
+                                            <div class="flex-grow-1 ms-3">
+                                                <div class="order-item-name">@item.Name</div>
+                                                <div class="order-item-qty">Số lượng: @item.Quantity</div>
+                                            </div>
+                                            <div class="order-item-price">@item.Subtotal.ToString("N0") đ</div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(item.Note))
+                                        {
+                                            <small class="text-muted ms-5">
+                                                <i class="bi bi-pencil"></i> @item.Note
+                                            </small>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <hr>
+
+                            <div class="summary-row">
+                                <span>Tạm tính:</span>
+                                <span id="subtotalAmount">@total.ToString("N0") đ</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Phí vận chuyển:</span>
+                                <span class="delivery-fee" id="deliveryFee">0 đ</span>
+                            </div>
+                            <hr>
+                            <div class="summary-row total">
+                                <strong>Tổng cộng:</strong>
+                                <strong class="final-total" id="finalTotal">@total.ToString("N0") đ</strong>
+                            </div>
+
+                            <button type="submit" class="btn btn-order-submit w-100 mt-4">
+                                <i class="bi bi-check-circle"></i> Đặt món ngay
+                            </button>
+
+                            <div class="order-note mt-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    Bằng cách đặt món, bạn đồng ý với các điều khoản và điều kiện của chúng tôi.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<style>
+    .checkout-form, .order-summary {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .order-type-card {
+        display: block;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .order-type-card:hover {
+            border-color: #cda45e;
+            background: #f8f9fa;
+        }
+
+        .order-type-card i {
+            font-size: 36px;
+            color: #cda45e;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .order-type-card span {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+    .btn-check:checked + .order-type-card {
+        background: #cda45e;
+        border-color: #cda45e;
+        color: white;
+    }
+
+        .btn-check:checked + .order-type-card i {
+            color: white;
+        }
+
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .payment-option:hover {
+            border-color: #cda45e;
+            background: #f8f9fa;
+        }
+
+        .payment-option i {
+            font-size: 28px;
+            color: #cda45e;
+        }
+
+    .form-check-input:checked + .payment-option {
+        border-color: #cda45e;
+        background: #f8f9fa;
+    }
+
+    .order-summary {
+        position: sticky;
+        top: 100px;
+    }
+
+    .order-items {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .order-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+    .order-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .order-item-name {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .order-item-qty {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .order-item-price {
+        color: #cda45e;
+        font-weight: bold;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 5px 0;
+    }
+
+        .summary-row.total {
+            font-size: 20px;
+            color: #cda45e;
+            margin-top: 15px;
+        }
+
+    .btn-order-submit {
+        background: #cda45e;
+        color: white;
+        padding: 15px;
+        border: none;
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s;
+        border-radius: 8px;
+    }
+
+        .btn-order-submit:hover {
+            background: #b8935a;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(205, 164, 94, 0.3);
+        }
+
+    .order-note {
+        text-align: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            const subtotal = @total;
+
+            // Xử lý hiển thị form theo loại đơn hàng
+            $('input[name="OrderType"]').change(function() {
+                const orderType = $(this).val();
+                console.log('Order type changed to:', orderType);
+
+                // Ẩn tất cả sections trước
+                $('#tableNumberSection').hide();
+                $('#deliverySection').hide();
+
+                // Xóa required cho tất cả
+                $('#tableNumberSection input').removeAttr('required');
+                $('#deliverySection textarea').removeAttr('required');
+
+                // Reset phí giao hàng
+                let deliveryFee = 0;
+
+                if (orderType === '0') { // Tại chỗ
+                    $('#tableNumberSection').show();
+                    $('#tableNumberSection input').attr('required', 'required');
+                } else if (orderType === '2') { // Giao hàng
+                    $('#deliverySection').show();
+                    $('#deliverySection textarea').attr('required', 'required');
+                    deliveryFee = 20000;
+                }
+
+                // Cập nhật phí giao hàng
+                $('#deliveryFee').text(deliveryFee.toLocaleString('vi-VN') + ' đ');
+
+                // Cập nhật tổng tiền
+                const total = subtotal + deliveryFee;
+                $('#finalTotal').text(total.toLocaleString('vi-VN') + ' đ');
+            });
+
+            // Trigger change khi load trang để hiển thị đúng
+            $('input[name="OrderType"]:checked').trigger('change');
+
+            // Validate form trước khi submit
+            $('form').submit(function(e) {
+                const orderType = $('input[name="OrderType"]:checked').val();
+
+                if (orderType === '0') { // Tại chỗ
+                    const tableNumber = $('#TableNumber').val();
+                    if (!tableNumber) {
+                        e.preventDefault();
+                        alert('Vui lòng nhập số bàn');
+                        $('#TableNumber').focus();
+                        return false;
+                    }
+                } else if (orderType === '2') { // Giao hàng
+                    const address = $('#DeliveryAddress').val();
+                    if (!address || address.trim() === '') {
+                        e.preventDefault();
+                        alert('Vui lòng nhập địa chỉ giao hàng');
+                        $('#DeliveryAddress').focus();
+                        return false;
+                    }
+                }
+
+                console.log('Form submitting with order type:', orderType);
+                return true;
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,400 @@
+﻿@model IEnumerable<HomeStay.Models.FoodOrders>
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+}
+
+<main class="main">
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Đơn hàng của tôi</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="~/Home/Index">Trang chủ</a></li>
+                    <li><a href="~/Restaurant/Index">Nhà hàng</a></li>
+                    <li class="current">Đơn hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="my-orders-section section">
+        <div class="container">
+            @if (!Model.Any())
+            {
+                <div class="empty-orders text-center py-5">
+                    <i class="bi bi-clipboard-x" style="font-size: 80px; color: #cda45e;"></i>
+                    <h3 class="mt-4">Chưa có đơn hàng nào</h3>
+                    <p class="text-muted">Bạn chưa có đơn hàng nào. Hãy đặt món ngay!</p>
+                    <a href="~/Restaurant/Index" class="btn btn-primary mt-3">
+                        <i class="bi bi-cart-plus"></i> Đặt món ngay
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="orders-filter mb-4">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary active" data-filter="all">
+                            Tất cả <span class="badge">@Model.Count()</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" data-filter="pending">
+                            Chờ xác nhận <span class="badge">@Model.Count(o => o.Status == HomeStay.Models.OrderStatus.Pending)</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-info" data-filter="confirmed">
+                            Đã xác nhận <span class="badge">@Model.Count(o => o.Status == HomeStay.Models.OrderStatus.Confirmed)</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="preparing">
+                            Đang chuẩn bị <span class="badge">@Model.Count(o => o.Status == HomeStay.Models.OrderStatus.Preparing)</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-filter="completed">
+                            Hoàn thành <span class="badge">@Model.Count(o => o.Status == HomeStay.Models.OrderStatus.Completed)</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" data-filter="cancelled">
+                            Đã hủy <span class="badge">@Model.Count(o => o.Status == HomeStay.Models.OrderStatus.Cancelled)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="orders-list">
+                    @foreach (var order in Model)
+                    {
+                        var statusClass = order.Status switch
+                        {
+                            HomeStay.Models.OrderStatus.Pending => "warning",
+                            HomeStay.Models.OrderStatus.Confirmed => "info",
+                            HomeStay.Models.OrderStatus.Preparing => "primary",
+                            HomeStay.Models.OrderStatus.Completed => "success",
+                            HomeStay.Models.OrderStatus.Cancelled => "danger",
+                            _ => "secondary"
+                        };
+
+                        var statusLower = order.Status.ToString().ToLower();
+
+                        <div class="order-card" data-status="@statusLower">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h5 class="order-id">
+                                        <i class="bi bi-receipt"></i> Đơn hàng #@order.OrderId.ToString("D6")
+                                    </h5>
+                                    <div class="order-meta">
+                                        <span class="order-date">
+                                            <i class="bi bi-calendar3"></i> @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                        </span>
+                                        <span class="order-type">
+                                            @if (order.OrderType == HomeStay.Models.OrderType.DineIn)
+                                            {
+                                                <i class="bi bi-shop"></i>
+
+                                                <text> Tại chỗ</text>
+                                            }
+                                            else if (order.OrderType == HomeStay.Models.OrderType.TakeAway)
+                                            {
+                                                <i class="bi bi-bag"></i>
+
+                                                <text> Mang về</text>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-truck"></i>
+
+                                                <text> Giao hàng</text>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="order-status">
+                                    <span class="badge bg-@statusClass status-badge">
+                                        @order.StatusText
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="order-body">
+                                <div class="order-items-preview">
+                                    @foreach (var item in order.OrderItems.Take(3))
+                                    {
+                                        <div class="order-item-preview">
+                                            <img src="@item.MenuItem?.Image" alt="@item.MenuItem?.Name">
+                                            <div class="item-info">
+                                                <div class="item-name">@item.MenuItem?.Name</div>
+                                                <div class="item-qty">x@item.Quantity</div>
+                                            </div>
+                                            <div class="item-price">@item.Subtotal.ToString("N0") đ</div>
+                                        </div>
+                                    }
+                                    @if (order.OrderItems.Count > 3)
+                                    {
+                                        <div class="more-items">
+                                            <small class="text-muted">
+                                                <i class="bi bi-three-dots"></i> Và @(order.OrderItems.Count - 3) món khác
+                                            </small>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="order-footer">
+                                <div class="order-total">
+                                    <span>Tổng cộng:</span>
+                                    <strong class="total-amount">@order.TotalAmount.ToString("N0") đ</strong>
+                                </div>
+                                <div class="order-actions">
+                                    <a href="@Url.Action("OrderDetail", new { id = order.OrderId })"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Chi tiết
+                                    </a>
+                                    @if (order.Status == HomeStay.Models.OrderStatus.Pending)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger btn-cancel-order"
+                                                data-order-id="@order.OrderId">
+                                            <i class="bi bi-x-circle"></i> Hủy đơn
+                                        </button>
+                                    }
+                                    @if (order.Status == HomeStay.Models.OrderStatus.Completed)
+                                    {
+                                        <a href="@Url.Action("Index", "Restaurant")" class="btn btn-sm btn-success">
+                                            <i class="bi bi-arrow-repeat"></i> Đặt lại
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</main>
+
+<style>
+    .orders-filter {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+        .orders-filter .btn-group {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .orders-filter .btn {
+            border-radius: 20px;
+            padding: 8px 20px;
+        }
+
+        .orders-filter .badge {
+            background: #cda45e;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+
+    .order-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+        .order-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #eee;
+    }
+
+    .order-id {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .order-meta {
+        display: flex;
+        gap: 20px;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .status-badge {
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 20px;
+    }
+
+    .order-body {
+        padding: 20px;
+    }
+
+    .order-item-preview {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .order-item-preview:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+    .item-info {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .item-qty {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .item-price {
+        color: #cda45e;
+        font-weight: bold;
+    }
+
+    .more-items {
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .order-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-top: 2px solid #eee;
+    }
+
+    .order-total {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .total-amount {
+        font-size: 24px;
+        color: #cda45e;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .empty-orders {
+        background: white;
+        padding: 60px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    @@media (max-width: 768px) {
+        .orders-filter .btn-group
+
+    {
+        width: 100%;
+    }
+
+    .orders-filter .btn {
+        flex: 1;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .order-footer {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .order-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+        .order-actions .btn {
+            width: 100%;
+        }
+
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Lọc đơn hàng theo trạng thái
+        $('.orders-filter .btn').click(function() {
+            $('.orders-filter .btn').removeClass('active');
+            $(this).addClass('active');
+
+            const filter = $(this).data('filter');
+
+            if (filter === 'all') {
+                $('.order-card').show();
+            } else {
+                $('.order-card').hide();
+                $(`.order-card[data-status="${filter}"]`).show();
+            }
+        });
+
+        // Hủy đơn hàng
+        $('.btn-cancel-order').click(function() {
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
+
+            const orderId = $(this).data('order-id');
+            const $card = $(this).closest('.order-card');
+
+            $.ajax({
+                url: '@Url.Action("CancelOrder")',
+                type: 'POST',
+                data: {
+                    id: orderId,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Đã hủy đơn hàng thành công');
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                }
+            });
+        });
+    });
+</script>
+
+@Html.AntiForgeryToken()

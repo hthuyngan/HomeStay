@@ -1,0 +1,396 @@
+﻿@model HomeStay.Models.FoodOrders
+
+@{
+    ViewData["Title"] = "Xác nhận đơn hàng";
+}
+
+<main class="main">
+    <section class="order-confirmation-section section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="confirmation-card">
+                        <div class="success-icon">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+
+                        <h2 class="text-center mb-3">Đặt món thành công!</h2>
+                        <p class="text-center text-muted mb-4">
+                            Cảm ơn bạn đã đặt món tại nhà hàng chúng tôi. Đơn hàng của bạn đang được xử lý.
+                        </p>
+
+                        <div class="order-info-box">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Mã đơn hàng</label>
+                                    <div class="info-value">#@Model.OrderId.ToString("D6")</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Ngày đặt</label>
+                                    <div class="info-value">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Hình thức</label>
+                                    <div class="info-value">
+                                        @if (Model.OrderType == HomeStay.Models.OrderType.DineIn)
+                                        {
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-shop"></i> Tại chỗ - Bàn @Model.TableNumber
+                                            </span>
+                                        }
+                                        else if (Model.OrderType == HomeStay.Models.OrderType.TakeAway)
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-bag"></i> Mang về
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-truck"></i> Giao hàng
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Trạng thái</label>
+                                    <div class="info-value">
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-clock-history"></i> @Model.StatusText
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="customer-info mt-4">
+                            <h5 class="mb-3"><i class="bi bi-person-circle"></i> Thông tin khách hàng</h5>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <i class="bi bi-person"></i>
+                                    <span>@Model.CustomerName</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>@Model.Phone</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <div class="info-item">
+                                        <i class="bi bi-envelope"></i>
+                                        <span>@Model.Email</span>
+                                    </div>
+                                }
+                                @if (Model.OrderType == HomeStay.Models.OrderType.Delivery)
+                                {
+                                    <div class="info-item">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <span>@Model.DeliveryAddress</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="order-items-section mt-4">
+                            <h5 class="mb-3"><i class="bi bi-cart-check"></i> Chi tiết đơn hàng</h5>
+                            <div class="table-responsive">
+                                <table class="table order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Món ăn</th>
+                                            <th class="text-center">Số lượng</th>
+                                            <th class="text-end">Đơn giá</th>
+                                            <th class="text-end">Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OrderItems)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="@item.MenuItem?.Image" alt="@item.MenuItem?.Name"
+                                                             class="order-item-img me-3">
+                                                        <div>
+                                                            <div class="fw-bold">@item.MenuItem?.Name</div>
+                                                            @if (!string.IsNullOrEmpty(item.Note))
+                                                            {
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-pencil"></i> @item.Note
+                                                                </small>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">x@item.Quantity</td>
+                                                <td class="text-end">@item.UnitPrice.ToString("N0") đ</td>
+                                                <td class="text-end fw-bold">@item.Subtotal.ToString("N0") đ</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                                            <td class="text-end">
+                                                <strong class="total-amount">@Model.TotalAmount.ToString("N0") đ</strong>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="payment-info mt-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="payment-box">
+                                        <i class="bi bi-credit-card"></i>
+                                        <div>
+                                            <div class="payment-label">Phương thức thanh toán</div>
+                                            <div class="payment-value">
+                                                @if (Model.PaymentMethod == HomeStay.Models.PaymentMethod.Cash)
+                                                {
+                                                    <span>Tiền mặt</span>
+                                                }
+                                                else if (Model.PaymentMethod == HomeStay.Models.PaymentMethod.BankTransfer)
+                                                {
+                                                    <span>Chuyển khoản</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Thẻ</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="payment-box">
+                                        <i class="bi bi-wallet2"></i>
+                                        <div>
+                                            <div class="payment-label">Trạng thái thanh toán</div>
+                                            <div class="payment-value">
+                                                @if (Model.PaymentStatus == HomeStay.Models.PaymentStatus.Paid)
+                                                {
+                                                    <span class="text-success">Đã thanh toán</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">Chưa thanh toán</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Note))
+                        {
+                            <div class="note-section mt-4">
+                                <h6><i class="bi bi-chat-left-text"></i> Ghi chú:</h6>
+                                <p class="note-content">@Model.Note</p>
+                            </div>
+                        }
+
+                        <div class="action-buttons mt-5">
+                            <a href="@Url.Action("OrderDetail", new { id = Model.OrderId })"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-eye"></i> Xem chi tiết
+                            </a>
+                            <a href="@Url.Action("MyOrders")" class="btn btn-outline-secondary">
+                                <i class="bi bi-list-ul"></i> Đơn hàng của tôi
+                            </a>
+                            <a href="@Url.Action("Index", "Restaurant")" class="btn btn-success">
+                                <i class="bi bi-arrow-left"></i> Tiếp tục đặt món
+                            </a>
+                        </div>
+
+                        <div class="alert alert-info mt-4" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Lưu ý:</strong> Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng.
+                            Vui lòng giữ máy và để ý điện thoại.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .confirmation-card {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .success-icon {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .success-icon i {
+            font-size: 100px;
+            color: #28a745;
+            animation: scaleIn 0.5s ease;
+        }
+
+    @@keyframes scaleIn {
+        0%
+
+    {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+    }
+
+    .order-info-box {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        border-left: 4px solid #cda45e;
+    }
+
+    .info-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .customer-info {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .info-item i {
+            color: #cda45e;
+            font-size: 20px;
+        }
+
+    .order-items-section {
+        padding: 20px;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 10px;
+    }
+
+    .order-table {
+        margin-bottom: 0;
+    }
+
+        .order-table thead {
+            background: #f8f9fa;
+        }
+
+    .order-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .total-amount {
+        font-size: 24px;
+        color: #cda45e;
+    }
+
+    .payment-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #eee;
+    }
+
+        .payment-box i {
+            font-size: 32px;
+            color: #cda45e;
+        }
+
+    .payment-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+    }
+
+    .payment-value {
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+
+    .note-section {
+        padding: 20px;
+        background: #fff9e6;
+        border-left: 4px solid #ffc107;
+        border-radius: 8px;
+    }
+
+    .note-content {
+        margin: 10px 0 0;
+        color: #666;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+        .action-buttons .btn {
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+    @@media (max-width: 768px) {
+        .confirmation-card
+
+    {
+        padding: 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+        .action-buttons .btn {
+            width: 100%;
+        }
+
+    }
+</style>

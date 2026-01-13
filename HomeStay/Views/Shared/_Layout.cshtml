@@ -136,8 +136,17 @@
                                     </li>
                                     <li><hr class="dropdown-divider my-1"></li>
                                     <li>
-                                        <a href="/booking/my-bookings">
-                                            <i class="bi bi-person me-2"></i>Đặt phòng của tôi
+                                        
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center rounded-3 py-2"
+                                           asp-controller="FoodOrder" asp-action="MyOrders">
+                                            <i class="bi bi-receipt me-2"></i>Đơn hàng của tôi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Cart", "FoodOrder")" class="cart-button-fixed" id="cartButton">
+                                            <i class="bi bi-person me-2"></i>Giỏ hàng
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider my-1"></li>

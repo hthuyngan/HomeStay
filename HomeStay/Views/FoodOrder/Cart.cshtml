@@ -1,0 +1,286 @@
+﻿@model List<HomeStay.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    var total = Model.Sum(c => c.Subtotal);
+}
+
+<main class="main">
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Giỏ hàng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="~/Home/Index">Trang chủ</a></li>
+                    <li><a href="~/Restaurant/Index">Nhà hàng</a></li>
+                    <li class="current">Giỏ hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="cart-section section">
+        <div class="container">
+            @if (!Model.Any())
+            {
+                <div class="empty-cart text-center py-5">
+                    <i class="bi bi-cart-x" style="font-size: 80px; color: #cda45e;"></i>
+                    <h3 class="mt-4">Giỏ hàng trống</h3>
+                    <p class="text-muted">Hãy thêm món ăn yêu thích vào giỏ hàng!</p>
+                    <a href="~/Restaurant/Index" class="btn btn-primary mt-3">
+                        <i class="bi bi-arrow-left"></i> Quay lại menu
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="cart-items">
+                            @foreach (var item in Model)
+                            {
+                                <div class="cart-item" data-id="@item.MenuItemId">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <img src="@item.Image" alt="@item.Name" class="img-fluid rounded">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5>@item.Name</h5>
+                                            @if (!string.IsNullOrEmpty(item.Note))
+                                            {
+                                                <small class="text-muted">
+                                                    <i class="bi bi-pencil"></i> @item.Note
+                                                </small>
+                                            }
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="price">@item.Price.ToString("N0") đ</div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="quantity-control">
+                                                <button class="btn-quantity minus" data-id="@item.MenuItemId">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <input type="number" class="quantity-input" value="@item.Quantity" min="1" readonly>
+                                                <button class="btn-quantity plus" data-id="@item.MenuItemId">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 text-end">
+                                            <div class="subtotal font-weight-bold">@item.Subtotal.ToString("N0") đ</div>
+                                            <button class="btn btn-sm btn-danger mt-2 remove-item" data-id="@item.MenuItemId">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="cart-actions mt-4">
+                            <a href="~/Restaurant/Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Tiếp tục đặt món
+                            </a>
+                            <a href="@Url.Action("ClearCart")" class="btn btn-outline-danger"
+                               onclick="return confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')">
+                                <i class="bi bi-trash"></i> Xóa giỏ hàng
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="cart-summary">
+                            <h4>Tóm tắt đơn hàng</h4>
+                            <hr>
+                            <div class="summary-row">
+                                <span>Tạm tính:</span>
+                                <span class="cart-subtotal">@total.ToString("N0") đ</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Phí vận chuyển:</span>
+                                <span class="text-muted">Tính sau</span>
+                            </div>
+                            <hr>
+                            <div class="summary-row total">
+                                <strong>Tổng cộng:</strong>
+                                <strong class="cart-total">@total.ToString("N0") đ</strong>
+                            </div>
+
+                            <a href="@Url.Action("Checkout")" class="btn btn-checkout w-100 mt-4">
+                                <i class="bi bi-check-circle"></i> Tiến hành đặt món
+                            </a>
+
+                            <div class="payment-methods mt-4">
+                                <h6>Phương thức thanh toán</h6>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <i class="bi bi-cash-coin" title="Tiền mặt"></i>
+                                    <i class="bi bi-credit-card" title="Thẻ"></i>
+                                    <i class="bi bi-bank" title="Chuyển khoản"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</main>
+
+<style>
+    .cart-item {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+        .cart-item:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .cart-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+
+    .price {
+        color: #cda45e;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .btn-quantity {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .btn-quantity:hover {
+            background: #cda45e;
+            color: white;
+            border-color: #cda45e;
+        }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .cart-summary {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 100px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+        .summary-row.total {
+            font-size: 20px;
+            color: #cda45e;
+        }
+
+    .btn-checkout {
+        background: #cda45e;
+        color: white;
+        padding: 15px;
+        border: none;
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+        .btn-checkout:hover {
+            background: #b8935a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .payment-methods {
+        text-align: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+        .payment-methods i {
+            font-size: 30px;
+            color: #cda45e;
+        }
+
+    .empty-cart {
+        background: white;
+        padding: 60px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Tăng số lượng
+        $('.btn-quantity.plus').click(function() {
+            const menuItemId = $(this).data('id');
+            const $input = $(this).siblings('.quantity-input');
+            const currentQty = parseInt($input.val());
+            updateQuantity(menuItemId, currentQty + 1);
+        });
+
+        // Giảm số lượng
+        $('.btn-quantity.minus').click(function() {
+            const menuItemId = $(this).data('id');
+            const $input = $(this).siblings('.quantity-input');
+            const currentQty = parseInt($input.val());
+            if (currentQty > 1) {
+                updateQuantity(menuItemId, currentQty - 1);
+            }
+        });
+
+        // Xóa món
+        $('.remove-item').click(function() {
+            if (!confirm('Bạn có chắc muốn xóa món này?')) return;
+
+            const menuItemId = $(this).data('id');
+            $.post('@Url.Action("RemoveFromCart")', { menuItemId }, function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            });
+        });
+
+        function updateQuantity(menuItemId, quantity) {
+            $.post('@Url.Action("UpdateCartItem")',
+                { menuItemId, quantity },
+                function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                }
+            );
+        }
+    });
+</script>

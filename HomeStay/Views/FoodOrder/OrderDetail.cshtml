@@ -1,0 +1,644 @@
+﻿@model HomeStay.Models.FoodOrders
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.OrderId.ToString("D6");
+}
+
+<main class="main">
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Chi tiết đơn hàng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="~/Home/Index">Trang chủ</a></li>
+                    <li><a href="~/FoodOrder/MyOrders">Đơn hàng của tôi</a></li>
+                    <li class="current">#@Model.OrderId.ToString("D6")</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="order-detail-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Order Status Timeline -->
+                    <div class="status-timeline">
+                        <h5 class="mb-4"><i class="bi bi-clock-history"></i> Trạng thái đơn hàng</h5>
+                        <div class="timeline">
+                            <div class="timeline-item @(Model.Status >= HomeStay.Models.OrderStatus.Pending ? "completed" : "")">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Chờ xác nhận</h6>
+                                    <small>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                            </div>
+                            <div class="timeline-item @(Model.Status >= HomeStay.Models.OrderStatus.Confirmed ? "completed" : "")">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Đã xác nhận</h6>
+                                    @if (Model.Status >= HomeStay.Models.OrderStatus.Confirmed)
+                                    {
+                                        <small>Đơn hàng đã được xác nhận</small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="timeline-item @(Model.Status >= HomeStay.Models.OrderStatus.Preparing ? "completed" : "")">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-fire"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Đang chuẩn bị</h6>
+                                    @if (Model.Status >= HomeStay.Models.OrderStatus.Preparing)
+                                    {
+                                        <small>Đầu bếp đang chuẩn bị món ăn</small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="timeline-item @(Model.Status >= HomeStay.Models.OrderStatus.Completed ? "completed" : "")">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-check-all"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Hoàn thành</h6>
+                                    @if (Model.Status >= HomeStay.Models.OrderStatus.Completed)
+                                    {
+                                        <small>Đơn hàng đã hoàn thành</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.Status == HomeStay.Models.OrderStatus.Cancelled)
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <i class="bi bi-x-circle"></i> Đơn hàng đã bị hủy
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Order Items -->
+                    <div class="order-items-detail mt-4">
+                        <h5 class="mb-4"><i class="bi bi-cart-check"></i> Danh sách món ăn</h5>
+                        <div class="items-list">
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <div class="item-card">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <img src="@item.MenuItem?.Image" alt="@item.MenuItem?.Name"
+                                                 class="img-fluid rounded">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6 class="item-name">@item.MenuItem?.Name</h6>
+                                            <div class="item-category">
+                                                <span class="badge bg-secondary">
+                                                    @item.MenuItem?.Category?.CategoryName
+                                                </span>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(item.Note))
+                                            {
+                                                <div class="item-note mt-2">
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-pencil"></i> @item.Note
+                                                    </small>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <div class="item-quantity">
+                                                <span class="qty-label">Số lượng</span>
+                                                <span class="qty-value">x@item.Quantity</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <div class="item-price-info">
+                                                <div class="unit-price">@item.UnitPrice.ToString("N0") đ</div>
+                                                <div class="subtotal">@item.Subtotal.ToString("N0") đ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Customer Info -->
+                    <div class="customer-detail mt-4">
+                        <h5 class="mb-4"><i class="bi bi-person-circle"></i> Thông tin khách hàng</h5>
+                        <div class="info-box">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-item">
+                                        <i class="bi bi-person"></i>
+                                        <div>
+                                            <label>Họ tên</label>
+                                            <p>@Model.CustomerName</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-item">
+                                        <i class="bi bi-telephone"></i>
+                                        <div>
+                                            <label>Số điện thoại</label>
+                                            <p>@Model.Phone</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="info-item">
+                                            <i class="bi bi-envelope"></i>
+                                            <div>
+                                                <label>Email</label>
+                                                <p>@Model.Email</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.OrderType == HomeStay.Models.OrderType.DineIn)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="info-item">
+                                            <i class="bi bi-shop"></i>
+                                            <div>
+                                                <label>Số bàn</label>
+                                                <p>Bàn số @Model.TableNumber</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.OrderType == HomeStay.Models.OrderType.Delivery)
+                                {
+                                    <div class="col-md-12 mb-3">
+                                        <div class="info-item">
+                                            <i class="bi bi-geo-alt"></i>
+                                            <div>
+                                                <label>Địa chỉ giao hàng</label>
+                                                <p>@Model.DeliveryAddress</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (Model.DeliveryTime.HasValue)
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                            <div class="info-item">
+                                                <i class="bi bi-clock"></i>
+                                                <div>
+                                                    <label>Thời gian giao</label>
+                                                    <p>@Model.DeliveryTime.Value.ToString("dd/MM/yyyy HH:mm")</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Note))
+                    {
+                        <div class="order-note-section mt-4">
+                            <h5 class="mb-3"><i class="bi bi-chat-left-text"></i> Ghi chú</h5>
+                            <div class="note-box">
+                                <p>@Model.Note</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- Order Summary Card -->
+                    <div class="order-summary-card sticky-top">
+                        <h5 class="mb-4">Thông tin đơn hàng</h5>
+
+                        <div class="summary-item">
+                            <label>Mã đơn hàng</label>
+                            <p class="order-code">#@Model.OrderId.ToString("D6")</p>
+                        </div>
+
+                        <div class="summary-item">
+                            <label>Ngày đặt</label>
+                            <p>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+
+                        <div class="summary-item">
+                            <label>Hình thức</label>
+                            <p>
+                                @if (Model.OrderType == HomeStay.Models.OrderType.DineIn)
+                                {
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-shop"></i> Tại chỗ
+                                    </span>
+                                }
+                                else if (Model.OrderType == HomeStay.Models.OrderType.TakeAway)
+                                {
+                                    <span class="badge bg-warning">
+                                        <i class="bi bi-bag"></i> Mang về
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-truck"></i> Giao hàng
+                                    </span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="summary-item">
+                            <label>Trạng thái</label>
+                            <p>
+                                @{
+                                    var statusClass = Model.Status switch
+                                    {
+                                        HomeStay.Models.OrderStatus.Pending => "warning",
+                                        HomeStay.Models.OrderStatus.Confirmed => "info",
+                                        HomeStay.Models.OrderStatus.Preparing => "primary",
+                                        HomeStay.Models.OrderStatus.Completed => "success",
+                                        HomeStay.Models.OrderStatus.Cancelled => "danger",
+                                        _ => "secondary"
+                                    };
+                                }
+                                <span class="badge bg-@statusClass">@Model.StatusText</span>
+                            </p>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-item">
+                            <label>Số món</label>
+                            <p>@Model.TotalItems món</p>
+                        </div>
+
+                        <div class="summary-item">
+                            <label>Tạm tính</label>
+                            <p>@Model.TotalAmount.ToString("N0") đ</p>
+                        </div>
+
+                        @if (Model.OrderType == HomeStay.Models.OrderType.Delivery)
+                        {
+                            <div class="summary-item">
+                                <label>Phí vận chuyển</label>
+                                <p>20,000 đ</p>
+                            </div>
+                        }
+
+                        <hr>
+
+                        <div class="summary-total">
+                            <label>Tổng cộng</label>
+                            <p class="total-amount">@Model.TotalAmount.ToString("N0") đ</p>
+                        </div>
+
+                        <hr>
+
+                        <div class="payment-info-box">
+                            <div class="payment-item">
+                                <i class="bi bi-credit-card"></i>
+                                <div>
+                                    <label>Thanh toán</label>
+                                    <p>
+                                        @if (Model.PaymentMethod == HomeStay.Models.PaymentMethod.Cash)
+                                        {
+                                            <text>Tiền mặt</text>
+                                        }
+                                        else if (Model.PaymentMethod == HomeStay.Models.PaymentMethod.BankTransfer)
+                                        {
+                                            <text>Chuyển khoản</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Thẻ</text>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="payment-item">
+                                <i class="bi bi-wallet2"></i>
+                                <div>
+                                    <label>Trạng thái</label>
+                                    <p>
+                                        @if (Model.PaymentStatus == HomeStay.Models.PaymentStatus.Paid)
+                                        {
+                                            <span class="text-success">Đã thanh toán</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-warning">Chưa thanh toán</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons mt-4">
+                            @if (Model.Status == HomeStay.Models.OrderStatus.Pending)
+                            {
+                                <button class="btn btn-danger w-100 mb-2" id="btnCancelOrder">
+                                    <i class="bi bi-x-circle"></i> Hủy đơn hàng
+                                </button>
+                            }
+                            <a href="@Url.Action("MyOrders")" class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="bi bi-arrow-left"></i> Quay lại
+                            </a>
+                            @if (Model.Status == HomeStay.Models.OrderStatus.Completed)
+                            {
+                                <a href="@Url.Action("Index", "Restaurant")" class="btn btn-success w-100">
+                                    <i class="bi bi-arrow-repeat"></i> Đặt lại
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .status-timeline {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 60px;
+        margin-bottom: 30px;
+    }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .timeline-icon {
+        position: absolute;
+        left: 0;
+        width: 40px;
+        height: 40px;
+        background: #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        z-index: 1;
+    }
+
+    .timeline-item.completed .timeline-icon {
+        background: #cda45e;
+    }
+
+    .timeline-content h6 {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+    }
+
+    .timeline-content small {
+        color: #666;
+    }
+
+    .order-items-detail, .customer-detail, .order-note-section {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .item-card {
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+    }
+
+        .item-card:hover {
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+    .item-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .item-quantity {
+        text-align: center;
+    }
+
+    .qty-label {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .qty-value {
+        display: block;
+        font-size: 20px;
+        font-weight: bold;
+        color: #cda45e;
+    }
+
+    .item-price-info {
+        text-align: right;
+    }
+
+    .unit-price {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .subtotal {
+        font-size: 18px;
+        font-weight: bold;
+        color: #cda45e;
+    }
+
+    .info-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: start;
+        gap: 15px;
+    }
+
+        .info-item i {
+            font-size: 24px;
+            color: #cda45e;
+            margin-top: 5px;
+        }
+
+        .info-item label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-item p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+    .note-box {
+        background: #fff9e6;
+        padding: 20px;
+        border-left: 4px solid #ffc107;
+        border-radius: 8px;
+    }
+
+    .order-summary-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        top: 100px;
+    }
+
+    .summary-item {
+        margin-bottom: 15px;
+    }
+
+        .summary-item label {
+            font-size: 13px;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .summary-item p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+    .order-code {
+        font-size: 18px;
+        color: #cda45e;
+        font-weight: bold;
+    }
+
+    .summary-total {
+        margin: 20px 0;
+    }
+
+        .summary-total label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .summary-total .total-amount {
+            font-size: 28px;
+            color: #cda45e;
+            font-weight: bold;
+            margin: 10px 0 0 0;
+        }
+
+    .payment-info-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .payment-item {
+        display: flex;
+        align-items: start;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+        .payment-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .payment-item i {
+            font-size: 24px;
+            color: #cda45e;
+        }
+
+        .payment-item label {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .payment-item p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+    @@media (max-width: 992px) {
+        .order-summary-card
+
+    {
+        position: static !important;
+        margin-top: 20px;
+    }
+
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#btnCancelOrder').click(function() {
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng này? Hành động này không thể hoàn tác.')) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("CancelOrder")',
+                type: 'POST',
+                data: {
+                    id: @Model.OrderId,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Đã hủy đơn hàng thành công');
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                }
+            });
+        });
+    });
+</script>
+
+@Html.AntiForgeryToken()

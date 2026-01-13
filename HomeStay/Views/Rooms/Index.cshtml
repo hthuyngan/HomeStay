@@ -67,7 +67,7 @@
                         <div class="col-xl-4 col-lg-6">
                             <div class="room-card">
                                 <div class="room-image">
-                                    <img src="~/img/hotel/room-1.webp" alt="Deluxe Ocean Suite" class="img-fluid">
+                                    <img src="@item.Image" alt="Deluxe Ocean Suite" class="img-fluid">
                                     <div class="room-features">
                                         <span class="feature-badge ocean">Ocean View</span>
                                         <span class="feature-badge popular">Popular</span>
@@ -123,3 +123,331 @@
     </section><!-- /Rooms 2 Section -->
 
 </main>
+<style>
+    /* Cart Button Fixed */
+    .cart-button-fixed {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: #cda45e;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        z-index: 1000;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+        .cart-button-fixed:hover {
+            background: #b8935a;
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .cart-button-fixed.bounce {
+            animation: bounce 0.6s;
+        }
+
+    @@keyframes bounce {
+        0%, 100%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #d9534f;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    /* Order Button */
+    .btn-order {
+        background: #cda45e;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+        .btn-order:hover {
+            background: #b8935a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    /* Toast Notification */
+    .toast-notification {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s;
+    }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-notification.success {
+            border-left: 4px solid #28a745;
+        }
+
+            .toast-notification.success i {
+                color: #28a745;
+                font-size: 20px;
+            }
+
+        .toast-notification.error {
+            border-left: 4px solid #dc3545;
+        }
+
+            .toast-notification.error i {
+                color: #dc3545;
+                font-size: 20px;
+            }
+
+    /* Menu Item Enhancements */
+    .menu-img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .menu-item {
+        transition: transform 0.3s ease;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+    .menu-tag {
+        background: #cda45e;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 3px;
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .price {
+        color: #cda45e;
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    /* Isotope Filters */
+    .isotope-filters li {
+        cursor: pointer;
+        padding: 8px 20px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+        .isotope-filters li:hover,
+        .isotope-filters li.filter-active {
+            background: #cda45e;
+            color: white;
+        }
+
+    /* Download Menu */
+    .download-menu {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #cda45e;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+        .download-menu:hover {
+            background: #b8935a;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+    /* Special Items */
+    .specials-badge {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .specials-badge span {
+            background: #1a1814;
+            color: #cda45e;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+    .special-item {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+        .special-item:hover {
+            transform: translateY(-10px);
+        }
+
+    .menu-item-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .menu-item-img img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+    .special-item:hover .menu-item-img img {
+        transform: scale(1.1);
+    }
+
+    .menu-item-badges {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+        .menu-item-badges span {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+    .badge-special {
+        background: #cda45e;
+        color: white;
+    }
+
+    .badge-vegan {
+        background: #5cb85c;
+        color: white;
+    }
+
+    .badge-spicy {
+        background: #d9534f;
+        color: white;
+    }
+
+    .menu-item-content {
+        padding: 25px;
+    }
+
+        .menu-item-content h4 {
+            color: #1a1814;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .menu-item-content p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+    .menu-item-price {
+        color: #cda45e;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Feature Items */
+    .feature-item {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+        .feature-item i {
+            font-size: 36px;
+            color: #cda45e;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+    /* Years Badge */
+    .years-badge {
+        position: absolute;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+        .years-badge .number {
+            display: block;
+            font-size: 36px;
+            font-weight: bold;
+            color: #cda45e;
+            line-height: 1;
+        }
+
+        .years-badge .text {
+            display: block;
+            font-size: 12px;
+            color: #666;
+        }
+
+    .chef-name {
+        font-weight: bold;
+        color: #1a1814;
+        margin-bottom: 10px;
+    }
+</style>

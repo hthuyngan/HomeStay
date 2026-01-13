@@ -48,7 +48,8 @@ public partial class HomestayContext : DbContext
 
     public virtual DbSet<MenuCategory> MenuCategories { get; set; }
     public virtual DbSet<MenuItem> MenuItems { get; set; }
-
+    public virtual DbSet<FoodOrders> FoodOrders { get; set; }
+    public virtual DbSet<FoodOrderItem> FoodOrderItems { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AboutInfo>(entity =>
