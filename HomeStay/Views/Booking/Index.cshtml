@@ -1,0 +1,608 @@
+﻿@model HomeStay.Models.Room
+@{
+    ViewData["Title"] = "Đặt phòng - " + Model.RoomName;
+}
+
+<main class="main">
+    <!-- Page Title -->
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Đặt phòng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="/">Trang chủ</a></li>
+                    <li><a href="/rooms">Phòng</a></li>
+                    <li class="current">Đặt phòng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="reservation-wrapper">
+                <div class="reservation-header text-center" data-aos="fade-up" data-aos-delay="200">
+                    <h2>Đặt phòng của bạn</h2>
+                    <p class="lead">Điền thông tin để hoàn tất đặt phòng</p>
+                </div>
+
+                <div class="booking-grid">
+                    <!-- Form đặt phòng -->
+                    <div class="booking-form-section" data-aos="fade-right" data-aos-delay="300">
+                        <div class="form-container">
+                            <form asp-controller="Booking" asp-action="CreateBooking" method="post" class="reservation-form">
+                                <input type="hidden" name="RoomID" value="@Model.RoomId" />
+
+                                <!-- Thông tin phòng -->
+                                <div class="form-section">
+                                    <h4>Thông tin phòng đã chọn</h4>
+                                    <div class="selected-room-info">
+                                        <div class="room-preview">
+                                            <img src="@Model.Image" alt="@Model.RoomName" class="img-fluid rounded">
+                                            <div class="room-details">
+                                                <h5>@Model.RoomName</h5>
+                                                <p class="room-type">@Model.RoomType.TypeName</p>
+                                                <p class="room-price">
+                                                    <span class="price">@Model.Price.Value.ToString("N0") VNĐ</span>
+                                                    <span class="period">/ đêm</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin đặt phòng -->
+                                <div class="form-section">
+                                    <h4>Chi tiết đặt phòng</h4>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="CheckInDate" class="form-label">
+                                                <i class="bi bi-calendar-check"></i> Ngày nhận phòng
+                                            </label>
+                                            <input type="date"
+                                                   class="form-control"
+                                                   id="CheckInDate"
+                                                   name="CheckInDate"
+                                                   required
+                                                   min="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                            <span class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="CheckOutDate" class="form-label">
+                                                <i class="bi bi-calendar-x"></i> Ngày trả phòng
+                                            </label>
+                                            <input type="date"
+                                                   class="form-control"
+                                                   id="CheckOutDate"
+                                                   name="CheckOutDate"
+                                                   required
+                                                   min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")">
+                                            <span class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="NumberOfGuests" class="form-label">
+                                                <i class="bi bi-people"></i> Số lượng khách
+                                            </label>
+                                            <select class="form-select"
+                                                    id="NumberOfGuests"
+                                                    name="NumberOfGuests"
+                                                    required>
+                                                <option value="">Chọn số khách</option>
+                                                @for (int i = 1; i <= Model.Capacity; i++)
+                                                {
+                                                    <option value="@i">@i khách</option>
+                                                }
+                                            </select>
+                                            <small class="form-text text-muted">Tối đa: @Model.Capacity khách</small>
+                                            <span class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin khách hàng -->
+                                <div class="form-section">
+                                    <h4>Thông tin liên hệ</h4>
+                                    <div class="form-grid">
+                                        <div class="form-group full-width">
+                                            <label for="FullName" class="form-label">
+                                                <i class="bi bi-person"></i> Họ và tên
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="FullName"
+                                                   name="FullName"
+                                                   placeholder="Nguyễn Văn A"
+                                                   value="@ViewBag.FullName"
+                                                   required
+                                                   maxlength="100">
+                                            <span class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="Phone" class="form-label">
+                                                <i class="bi bi-telephone"></i> Số điện thoại
+                                            </label>
+                                            <input type="tel"
+                                                   class="form-control"
+                                                   id="Phone"
+                                                   name="Phone"
+                                                   placeholder="0912345678"
+                                                   value="@ViewBag.Phone"
+                                                   required
+                                                   maxlength="20"
+                                                   pattern="[0-9]{10,11}">
+                                            <span class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="Email" class="form-label">
+                                                <i class="bi bi-envelope"></i> Email
+                                            </label>
+                                            <input type="email"
+                                                   class="form-control"
+                                                   id="Email"
+                                                   name="Email"
+                                                   placeholder="example@email.com"
+                                                   value="@ViewBag.Email"
+                                                   required
+                                                   maxlength="100">
+                                            <span class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Yêu cầu đặc biệt -->
+                                <div class="form-section">
+                                    <h4>Yêu cầu đặc biệt (tùy chọn)</h4>
+                                    <div class="form-group">
+                                        <label for="SpecialRequest" class="form-label">
+                                            <i class="bi bi-chat-dots"></i> Ghi chú thêm
+                                        </label>
+                                        <textarea class="form-control"
+                                                  id="SpecialRequest"
+                                                  name="SpecialRequest"
+                                                  rows="4"
+                                                  maxlength="255"
+                                                  placeholder="Ví dụ: Giường thêm, tầng cao, view đẹp..."></textarea>
+                                        <small class="form-text text-muted">Tối đa 255 ký tự</small>
+                                    </div>
+                                </div>
+
+                                <!-- Tổng giá -->
+                                <div class="booking-summary">
+                                    <h4>Tóm tắt đặt phòng</h4>
+                                    <div class="summary-item">
+                                        <span>Giá mỗi đêm:</span>
+                                        <span class="price-value">@Model.Price.Value.ToString("N0") VNĐ</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span>Số đêm:</span>
+                                        <span id="nights-count">0 đêm</span>
+                                    </div>
+                                    <hr>
+                                    <div class="summary-item total">
+                                        <span>Tổng cộng:</span>
+                                        <span id="total-price" class="total-price">0 VNĐ</span>
+                                    </div>
+                                </div>
+
+                                <!-- Nút submit -->
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-calendar-check me-2"></i>
+                                        Xác nhận đặt phòng
+                                    </button>
+                                    <a href="/rooms/details/@Model.Alias-@Model.RoomId" class="btn btn-outline-secondary btn-lg">
+                                        <i class="bi bi-arrow-left me-2"></i>
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin khách sạn -->
+                    <div class="hotel-showcase" data-aos="fade-left" data-aos-delay="400">
+                        <div class="showcase-image">
+                            <img src="@Model.Image" alt="@Model.RoomName" class="img-fluid rounded">
+                        </div>
+
+                        <div class="hotel-highlights">
+                            <h3>Chính sách đặt phòng</h3>
+                            <div class="highlights-grid">
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="bi bi-clock"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h5>Giờ nhận phòng</h5>
+                                        <p>Từ 14:00 - 22:00</p>
+                                    </div>
+                                </div>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="bi bi-clock-history"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h5>Giờ trả phòng</h5>
+                                        <p>Trước 12:00 trưa</p>
+                                    </div>
+                                </div>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="bi bi-x-circle"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h5>Hủy phòng miễn phí</h5>
+                                        <p>Trước 24 giờ nhận phòng</p>
+                                    </div>
+                                </div>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h5>Đảm bảo an toàn</h5>
+                                        <p>Thông tin được bảo mật</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="booking-guarantees">
+                            <div class="guarantee-item">
+                                <i class="bi bi-shield-check"></i>
+                                <span>Đặt phòng an toàn</span>
+                            </div>
+                            <div class="guarantee-item">
+                                <i class="bi bi-telephone"></i>
+                                <span>Hỗ trợ 24/7</span>
+                            </div>
+                            <div class="guarantee-item">
+                                <i class="bi bi-tag"></i>
+                                <span>Giá tốt nhất</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        // Tính toán số đêm và tổng giá
+        const pricePerNight = @Model.Price.Value;
+        const checkInInput = document.getElementById('CheckInDate');
+        const checkOutInput = document.getElementById('CheckOutDate');
+        const nightsDisplay = document.getElementById('nights-count');
+        const totalDisplay = document.getElementById('total-price');
+
+        function calculateTotal() {
+            const checkIn = new Date(checkInInput.value);
+            const checkOut = new Date(checkOutInput.value);
+
+            if (checkIn && checkOut && checkOut > checkIn) {
+                const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+                const total = nights * pricePerNight;
+
+                nightsDisplay.textContent = nights + ' đêm';
+                totalDisplay.textContent = total.toLocaleString('vi-VN') + ' VNĐ';
+            } else {
+                nightsDisplay.textContent = '0 đêm';
+                totalDisplay.textContent = '0 VNĐ';
+            }
+        }
+
+        // Tự động cập nhật ngày trả phòng khi chọn ngày nhận phòng
+        checkInInput.addEventListener('change', function() {
+            const checkIn = new Date(this.value);
+            const minCheckOut = new Date(checkIn);
+            minCheckOut.setDate(minCheckOut.getDate() + 1);
+            checkOutInput.min = minCheckOut.toISOString().split('T')[0];
+
+            // Nếu ngày trả phòng nhỏ hơn ngày nhận phòng + 1, tự động set
+            if (!checkOutInput.value || new Date(checkOutInput.value) <= checkIn) {
+                checkOutInput.value = minCheckOut.toISOString().split('T')[0];
+            }
+            calculateTotal();
+        });
+
+        checkOutInput.addEventListener('change', calculateTotal);
+
+        // Validate form trước khi submit
+        document.querySelector('.reservation-form').addEventListener('submit', function(e) {
+            const checkIn = new Date(checkInInput.value);
+            const checkOut = new Date(checkOutInput.value);
+
+            if (checkOut <= checkIn) {
+                e.preventDefault();
+                alert('Ngày trả phòng phải sau ngày nhận phòng!');
+                return false;
+            }
+        });
+    </script>
+}
+
+<style>
+    .booking-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    @@media (max-width: 991px) {
+        .booking-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    .form-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .form-section {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .form-section h4 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+        .form-label i {
+            color: #0d6efd;
+            margin-right: 5px;
+        }
+
+    .form-control, .form-select {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+        }
+
+    .selected-room-info {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .room-preview {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+        .room-preview img {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+        }
+
+    .room-details h5 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .room-type {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .room-price {
+        margin: 0;
+    }
+
+        .room-price .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0d6efd;
+        }
+
+        .room-price .period {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+    .booking-summary {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+        .booking-summary h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+        .summary-item.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-top: 15px;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+        .form-actions .btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.05rem;
+            border-radius: 8px;
+        }
+
+    .hotel-highlights {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+        .hotel-highlights h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    .highlights-grid {
+        display: grid;
+        gap: 20px;
+    }
+
+    .highlight-item {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .highlight-icon {
+        width: 50px;
+        height: 50px;
+        background: #e7f3ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .highlight-icon i {
+            font-size: 1.5rem;
+            color: #0d6efd;
+        }
+
+    .highlight-content h5 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .highlight-content p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .booking-guarantees {
+        display: flex;
+        justify-content: space-around;
+        background: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    .guarantee-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
+
+        .guarantee-item i {
+            font-size: 2rem;
+            color: #28a745;
+        }
+
+        .guarantee-item span {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+    .showcase-image {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    @@media (max-width: 768px) {
+        .form-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .room-preview {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .booking-guarantees {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    }
+</style>

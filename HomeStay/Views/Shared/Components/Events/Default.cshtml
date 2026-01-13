@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<HomeStay.Models.Event>
+
 <section id="events-cards" class="events-cards section">
 
     <!-- Section Title -->
@@ -28,7 +29,8 @@
                                 <span class="feature-item"><i class="bi bi-check-circle"></i> Premium Venues</span>
                                 <span class="feature-item"><i class="bi bi-check-circle"></i> Full Catering</span>
                             </div>
-                            <a href="hotel-events.html" class="event-link">
+                            <a asp-controller ="Events" asp-action="Details"
+                               asp-route-id="@item.EventId"  class="event-link">
                                 Khám phá chi tiết <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>

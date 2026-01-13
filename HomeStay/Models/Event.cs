@@ -9,9 +9,16 @@ public partial class Event
 
     public string? Title { get; set; }
 
-    public DateOnly? EventDate { get; set; }
+    public DateTime EventDate { get; set; }
 
     public string? Description { get; set; }
 
     public string? Image { get; set; }
+
+    public string? Location { get; set; }
+    public TimeSpan? StartTime { get; set; }
+    public TimeSpan? EndTime { get; set; }
+
+    public bool IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

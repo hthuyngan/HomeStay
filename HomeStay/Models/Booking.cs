@@ -1,29 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HomeStay.Models;
-
-public partial class Booking
+namespace HomeStay.Models
 {
-    public int BookingId { get; set; }
+    public partial class Booking
+    {
+        [Key]
+        public int BookingId { get; set; }
 
-    public int? RoomId { get; set; }
+        public int? RoomId { get; set; }
 
-    public string? FullName { get; set; }
+        public int? UserId { get; set; }
 
-    public string? Phone { get; set; }
+        [StringLength(100)]
+        public string? FullName { get; set; }
 
-    public string? Email { get; set; }
+        [StringLength(20)]
+        public string? Phone { get; set; }
 
-    public DateOnly? CheckInDate { get; set; }
+        [StringLength(100)]
+        [EmailAddress]
+        public string? Email { get; set; }
 
-    public DateOnly? CheckOutDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? CheckInDate { get; set; }
 
-    public int? NumberOfGuests { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? CheckOutDate { get; set; }
 
-    public string? SpecialRequest { get; set; }
+        public int? NumberOfGuests { get; set; }
 
-    public DateTime? CreatedDate { get; set; }
+        [StringLength(255)]
+        public string? SpecialRequest { get; set; }
 
-    public virtual Room? Room { get; set; }
+        public DateTime? CreatedDate { get; set; }
+
+        // Navigation properties
+        [ForeignKey("RoomId")]
+        public virtual Room? Room { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+    }
 }

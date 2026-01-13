@@ -1,0 +1,287 @@
+﻿@model IEnumerable<HomeStay.Models.Event>
+
+@{
+    ViewData["Title"] = "Sự kiện";
+}
+
+<!-- Hero Section -->
+<section class="hero-section bg-gradient text-white py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-3">Sự kiện & Hoạt động</h1>
+                <p class="lead mb-4">Khám phá các sự kiện thú vị và hoạt động đặc sắc tại Homestay của chúng tôi</p>
+                <div class="search-box mx-auto" style="max-width: 600px;">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm sự kiện..." id="searchInput">
+                        <button class="btn btn-light" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section py-4 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary active" data-filter="all">Tất cả</button>
+                    <button class="btn btn-outline-primary" data-filter="upcoming">Sắp diễn ra</button>
+                    <button class="btn btn-outline-primary" data-filter="past">Đã diễn ra</button>
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <select class="form-select d-inline-block w-auto">
+                    <option>Sắp xếp: Mới nhất</option>
+                    <option>Sắp xếp: Cũ nhất</option>
+                    <option>Sắp xếp: A-Z</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events Grid -->
+<section class="events-section py-5">
+    <div class="container">
+        @if (Model.Any())
+        {
+            <div class="row g-4" id="eventsGrid">
+                @foreach (var ev in Model)
+                {
+                    <div class="col-lg-4 col-md-6 event-item" data-date="@ev.EventDate">
+                        <div class="card event-card h-100 border-0 shadow-sm">
+                            <!-- Event Image -->
+                            <div class="position-relative overflow-hidden" style="height: 250px;">
+                                @if (!string.IsNullOrEmpty(ev.Image))
+                                {
+                                    <img src="~/img/hotel/event-1.webp" class="card-img-top h-100 w-100" alt="@ev.Title" style="object-fit: cover; transition: transform 0.3s;">
+                                }
+                                else
+                                {
+                                    <div class="bg-gradient h-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <i class="fas fa-calendar-alt fa-4x text-white opacity-50"></i>
+                                    </div>
+                                }
+
+                                <!-- Date Badge -->
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <div class="badge bg-white text-dark p-2 shadow-sm">
+                                        <div class="fw-bold" style="font-size: 1.2rem;">@ev.EventDate.Day</div>
+                                        <div style="font-size: 0.8rem;">Tháng @ev.EventDate.Month</div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Badge -->
+                                @if (ev.EventDate > DateTime.Now)
+                                {
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-success">Sắp diễn ra</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-secondary">Đã diễn ra</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Event Content -->
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-bold mb-3">
+                                    <a asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark stretched-link">
+                                        @ev.Title
+                                    </a>
+                                </h5>
+
+                                <p class="card-text text-muted mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                    @ev.Description
+                                </p>
+
+                                <!-- Event Meta -->
+                                <div class="event-meta">
+                                    <div class="d-flex align-items-center text-muted mb-2">
+                                        <i class="far fa-clock me-2"></i>
+                                        <small>@ev.StartTime?.ToString(@"hh\:mm") - @ev.EndTime?.ToString(@"hh\:mm")</small>
+                                    </div>
+                                    <div class="d-flex align-items-center text-muted">
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        <small>@ev.Location</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div class="card-footer bg-transparent border-top-0 pt-0 pb-3">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary flex-fill">
+                                        <i class="far fa-heart me-1"></i>Lưu
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary flex-fill">
+                                        <i class="fas fa-share-alt me-1"></i>Chia sẻ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <nav aria-label="Event pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Trước</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
+                        <h3 class="text-muted">Chưa có sự kiện nào</h3>
+                        <p class="text-muted">Hiện tại chưa có sự kiện nào được tổ chức. Vui lòng quay lại sau!</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3">Không muốn bỏ lỡ sự kiện?</h2>
+                <p class="text-muted mb-4">Đăng ký nhận thông báo về các sự kiện mới nhất</p>
+                <div class="input-group mb-3" style="max-width: 500px; margin: 0 auto;">
+                    <input type="email" class="form-control" placeholder="Nhập email của bạn">
+                    <button class="btn btn-primary" type="button">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Custom CSS -->
+<style>
+    .event-card {
+        transition: all 0.3s ease;
+    }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        }
+
+            .event-card:hover img {
+                transform: scale(1.1);
+            }
+
+    .stretched-link::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        content: "";
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
+    }
+
+    .filter-section .btn {
+        transition: all 0.3s ease;
+    }
+
+    .hero-section {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,128C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+</style>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const eventItems = document.querySelectorAll('.event-item');
+
+        eventItems.forEach(item => {
+            const title = item.querySelector('.card-title').textContent.toLowerCase();
+            const description = item.querySelector('.card-text').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active', 'btn-primary'));
+            filterButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('active', 'btn-primary');
+
+            const filter = this.getAttribute('data-filter');
+            const eventItems = document.querySelectorAll('.event-item');
+            const today = new Date().toISOString().split('T')[0];
+
+            eventItems.forEach(item => {
+                const eventDate = item.getAttribute('data-date');
+
+                if (filter === 'all') {
+                    item.style.display = '';
+                } else if (filter === 'upcoming') {
+                    item.style.display = eventDate >= today ? '' : 'none';
+                } else if (filter === 'past') {
+                    item.style.display = eventDate < today ? '' : 'none';
+                }
+            });
+        });
+    });
+</script>

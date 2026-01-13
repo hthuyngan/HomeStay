@@ -1,0 +1,535 @@
+﻿@model HomeStay.Models.Booking
+@{
+    ViewData["Title"] = "Xác nhận đặt phòng";
+    var nights = ViewBag.Nights;
+    var totalAmount = ViewBag.TotalAmount;
+}
+
+<main class="main">
+    <!-- Page Title -->
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Xác nhận đặt phòng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="/">Trang chủ</a></li>
+                    <li class="current">Xác nhận</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Confirmation Section -->
+    <section class="confirmation-section section">
+        <div class="container" data-aos="fade-up">
+
+            <!-- Success Message -->
+            <div class="success-banner text-center mb-5" data-aos="zoom-in" data-aos-delay="100">
+                <div class="success-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h2>Đặt phòng thành công!</h2>
+                <p class="lead">Cảm ơn bạn đã đặt phòng tại homestay của chúng tôi</p>
+                <p class="booking-reference">
+                    Mã đặt phòng: <strong>#@Model.BookingId.ToString("D6")</strong>
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    <!-- Booking Details Card -->
+                    <div class="confirmation-card mb-4" data-aos="fade-up" data-aos-delay="200">
+                        <h3 class="card-title">
+                            <i class="bi bi-info-circle"></i> Thông tin đặt phòng
+                        </h3>
+
+                        <div class="room-info mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <img src="@Model.Room.Image" alt="@Model.Room.RoomName" class="img-fluid rounded">
+                                </div>
+                                <div class="col-md-8">
+                                    <h4>@Model.Room.RoomName</h4>
+                                    <p class="room-type">@Model.Room.RoomType.TypeName</p>
+                                    <div class="room-meta">
+                                        <span><i class="bi bi-people"></i> @Model.NumberOfGuests khách</span>
+                                        <span><i class="bi bi-grid"></i> @Model.Room.Size</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="booking-details">
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-calendar-check"></i> Ngày nhận phòng
+                                </div>
+                                <div class="detail-value">
+                                    @Model.CheckInDate.Value.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))
+                                    <small class="text-muted d-block">Từ 14:00</small>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-calendar-x"></i> Ngày trả phòng
+                                </div>
+                                <div class="detail-value">
+                                    @Model.CheckOutDate.Value.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))
+                                    <small class="text-muted d-block">Trước 12:00</small>
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-moon-stars"></i> Số đêm
+                                </div>
+                                <div class="detail-value">
+                                    @nights đêm
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-people"></i> Số khách
+                                </div>
+                                <div class="detail-value">
+                                    @Model.NumberOfGuests khách
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.SpecialRequest))
+                            {
+                                <div class="detail-row">
+                                    <div class="detail-label">
+                                        <i class="bi bi-chat-dots"></i> Yêu cầu đặc biệt
+                                    </div>
+                                    <div class="detail-value">
+                                        @Model.SpecialRequest
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Guest Information Card -->
+                    <div class="confirmation-card mb-4" data-aos="fade-up" data-aos-delay="300">
+                        <h3 class="card-title">
+                            <i class="bi bi-person"></i> Thông tin khách hàng
+                        </h3>
+
+                        <div class="booking-details">
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-person-circle"></i> Họ và tên
+                                </div>
+                                <div class="detail-value">
+                                    @Model.FullName
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-envelope"></i> Email
+                                </div>
+                                <div class="detail-value">
+                                    @Model.Email
+                                </div>
+                            </div>
+
+                            <div class="detail-row">
+                                <div class="detail-label">
+                                    <i class="bi bi-telephone"></i> Số điện thoại
+                                </div>
+                                <div class="detail-value">
+                                    @Model.Phone
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Summary Card -->
+                    <div class="confirmation-card payment-card" data-aos="fade-up" data-aos-delay="400">
+                        <h3 class="card-title">
+                            <i class="bi bi-cash-coin"></i> Tổng thanh toán
+                        </h3>
+
+                        <div class="payment-details">
+                            <div class="payment-row">
+                                <span>Giá phòng (@nights đêm × @Model.Room.Price.Value.ToString("N0") VNĐ)</span>
+                                <span>@totalAmount.ToString("N0") VNĐ</span>
+                            </div>
+                            <div class="payment-row subtotal">
+                                <span>Thuế và phí</span>
+                                <span>0 VNĐ</span>
+                            </div>
+                            <hr>
+                            <div class="payment-row total">
+                                <span>Tổng cộng</span>
+                                <span>@totalAmount.ToString("N0") VNĐ</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-note">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Thanh toán tại quầy lễ tân khi nhận phòng</span>
+                        </div>
+                    </div>
+
+                    <!-- Important Information -->
+                    <div class="info-box" data-aos="fade-up" data-aos-delay="500">
+                        <h4><i class="bi bi-exclamation-triangle"></i> Lưu ý quan trọng</h4>
+                        <ul>
+                            <li>Vui lòng giữ mã đặt phòng <strong>#@Model.BookingId.ToString("D6")</strong> để check-in</li>
+                            <li>Email xác nhận đã được gửi đến <strong>@Model.Email</strong></li>
+                            <li>Vui lòng đến trước 22:00 vào ngày nhận phòng</li>
+                            <li>Hủy phòng miễn phí trước 24 giờ nhận phòng</li>
+                            <li>Mang theo CMND/CCCD khi check-in</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons text-center mt-4" data-aos="fade-up" data-aos-delay="600">
+                        <a href="#" onclick="window.print(); return false;" class="btn btn-outline-primary btn-lg me-3">
+                            <i class="bi bi-printer"></i> In xác nhận
+                        </a>
+                        <a href="/" class="btn btn-primary btn-lg">
+                            <i class="bi bi-house"></i> Về trang chủ
+                        </a>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="support-box text-center mt-5" data-aos="fade-up" data-aos-delay="700">
+                        <h5>Cần hỗ trợ?</h5>
+                        <p>Liên hệ với chúng tôi:</p>
+                        <div class="support-contacts">
+                            <a href="tel:+84123456789" class="support-link">
+                                <i class="bi bi-telephone-fill"></i> (+84) 123 456 789
+                            </a>
+                            <a href="mailto:support@homestay.com" class="support-link">
+                                <i class="bi bi-envelope-fill"></i> support@homestay.com
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<style>
+    .confirmation-section {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+
+    .success-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 50px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    @@keyframes scaleIn {
+        from
+
+    {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    .success-banner h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .booking-reference {
+        font-size: 1.1rem;
+        margin-top: 20px;
+        padding: 15px 30px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50px;
+        display: inline-block;
+    }
+
+        .booking-reference strong {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+        }
+
+    .confirmation-card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        color: #333;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+    }
+
+        .card-title i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+    .room-info img {
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .room-info h4 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .room-type {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .room-meta {
+        display: flex;
+        gap: 20px;
+        color: #777;
+    }
+
+        .room-meta i {
+            color: #667eea;
+            margin-right: 5px;
+        }
+
+    .booking-details {
+        margin-top: 20px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+    .detail-label {
+        font-weight: 500;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .detail-label i {
+            color: #667eea;
+        }
+
+    .detail-value {
+        text-align: right;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .payment-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border: 2px solid #667eea;
+    }
+
+    .payment-details {
+        margin-top: 20px;
+    }
+
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        font-size: 1rem;
+    }
+
+        .payment-row.subtotal {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .payment-row.total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 10px;
+        }
+
+    .payment-note {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 8px;
+        color: #555;
+    }
+
+        .payment-note i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+    .info-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+        .info-box h4 {
+            color: #856404;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+            .info-box h4 i {
+                margin-right: 8px;
+            }
+
+        .info-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #856404;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+        }
+
+    .action-buttons .btn {
+        padding: 15px 40px;
+        font-size: 1.05rem;
+        border-radius: 50px;
+        min-width: 200px;
+    }
+
+    .support-box {
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+        .support-box h5 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+    .support-contacts {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .support-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+        .support-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .support-link i {
+            font-size: 1.2rem;
+        }
+
+    @@media print {
+        .action-buttons, .page-title, .support-box
+
+    {
+        display: none;
+    }
+
+    .confirmation-section {
+        padding: 0;
+    }
+
+    .confirmation-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .success-banner
+
+    {
+        padding: 30px 20px;
+    }
+
+    .success-banner h2 {
+        font-size: 1.8rem;
+    }
+
+    .success-icon {
+        font-size: 3.5rem;
+    }
+
+    .room-info .row {
+        flex-direction: column;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+
+    .support-contacts {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .action-buttons .btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    }
+</style>

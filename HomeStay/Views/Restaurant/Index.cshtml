@@ -1,0 +1,450 @@
+﻿@model IEnumerable<HomeStay.Models.MenuCategory>
+
+@{
+    ViewData["Title"] = "Nhà Hàng";
+    var specialItems = ViewBag.SpecialItems as List<HomeStay.Models.MenuItem>;
+}
+
+<!-- Page Title -->
+<div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Nhà Hàng</h1>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                <li class="current">Nhà Hàng</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Restaurant Section -->
+<section id="restaurant" class="restaurant section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-up">
+                <div class="about-content">
+                    <h2>Trải Nghiệm Ẩm Thực Độc Đáo</h2>
+                    <p class="fst-italic">Chúng tôi tự hào mang đến cho bạn những món ăn đậm chất Việt Nam, được chế biến từ nguyên liệu tươi ngon và công thức truyền thống.</p>
+                    <p>Với không gian ấm cúng và đội ngũ phục vụ chuyên nghiệp, nhà hàng của chúng tôi là nơi lý tưởng để bạn thưởng thức bữa ăn ngon cùng gia đình và bạn bè.</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="feature-item" data-aos="fade-up" data-aos-delay="150">
+                                <i class="bi bi-award"></i>
+                                <h4>Dịch Vụ Xuất Sắc</h4>
+                                <p>Đội ngũ nhân viên nhiệt tình, chu đáo, sẵn sàng phục vụ 24/7.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
+                                <i class="bi bi-trophy"></i>
+                                <h4>Chất Lượng Hàng Đầu</h4>
+                                <p>Được công nhận bởi nhiều tạp chí ẩm thực uy tín trong nước.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="signature mt-4" data-aos="fade-up" data-aos-delay="250">
+                        <p class="chef-name">Nguyễn Văn A, Trưởng Bếp</p>
+                        <img src="~/assets/img/misc/signature-1.webp" alt="Chef Signature" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="about-gallery">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <img src="~/assets/img/restaurant/showcase-3.webp" class="img-fluid rounded" alt="Restaurant Image">
+                        </div>
+                        <div class="col-6">
+                            <img src="~/assets/img/restaurant/showcase-8.webp" class="img-fluid rounded" alt="Restaurant Image">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="years-badge">
+                                <span class="number">18</span>
+                                <span class="text">Năm Kinh Nghiệm</span>
+                            </div>
+                            <img src="~/assets/img/restaurant/showcase-6.webp" class="img-fluid rounded" alt="Restaurant Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Section -->
+<section id="menu" class="menu section">
+    <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Thực Đơn</span>
+        <h2>Thực Đơn</h2>
+        <p>Khám phá những món ăn đặc sắc được chế biến bởi đầu bếp chuyên nghiệp của chúng tôi</p>
+    </div>
+
+    <div class="container" data-aos="fade-up">
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+            
+            <!-- Menu Filters -->
+            <div class="menu-filters isotope-filters mb-5">
+                <ul>
+                    <li data-filter="*" class="filter-active">Tất Cả</li>
+                    @foreach (var category in Model.OrderBy(c => c.DisplayOrder))
+                    {
+                        <li data-filter=".filter-@category.CategoryNameEn.ToLower().Replace(" ", "-")">
+                            @category.CategoryName
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- Menu Container -->
+            <div class="menu-container isotope-container row gy-4">
+                @foreach (var category in Model.OrderBy(c => c.DisplayOrder))
+                {
+                    @foreach (var item in category.MenuItems.Where(m => !m.IsSpecial).OrderBy(m => m.DisplayOrder))
+                    {
+                        <div class="col-lg-6 isotope-item filter-@category.CategoryNameEn.ToLower().Replace(" ", "-")">
+                            <div class="menu-item d-flex align-items-center gap-4">
+                                @if (!string.IsNullOrEmpty(item.Image))
+                                {
+                                    <img src="@item.Image" alt="@item.Name" class="menu-img img-fluid rounded-3">
+                                }
+                                else
+                                {
+                                    <img src="~/assets/img/restaurant/default.webp" alt="@item.Name" class="menu-img img-fluid rounded-3">
+                                }
+                                <div class="menu-content">
+                                    <h5>
+                                        @item.Name
+                                        @if (!string.IsNullOrEmpty(item.Tags))
+                                        {
+                                            var firstTag = item.TagList.FirstOrDefault();
+                                            if (!string.IsNullOrEmpty(firstTag))
+                                            {
+                                                <span class="menu-tag">@firstTag</span>
+                                            }
+                                        }
+                                    </h5>
+                                    <p>@item.Description</p>
+                                    <div class="price">@item.PriceFormatted</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Download Menu Button -->
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="#" class="download-menu">
+                <i class="bi bi-file-earmark-pdf"></i> Tải Thực Đơn Đầy Đủ
+            </a>
+        </div>
+
+        <!-- Chef's Specials -->
+        @if (specialItems != null && specialItems.Any())
+        {
+            <div class="col-12 mt-5" data-aos="fade-up">
+                <div class="specials-badge">
+                    <span><i class="bi bi-award"></i> Món Đặc Biệt Của Đầu Bếp</span>
+                </div>
+                <div class="specials-container">
+                    <div class="row g-4">
+                        @foreach (var special in specialItems)
+                        {
+                            <div class="col-md-6">
+                                <div class="menu-item special-item">
+                                    <div class="menu-item-img">
+                                        @if (!string.IsNullOrEmpty(special.Image))
+                                        {
+                                            <img src="@special.Image" alt="@special.Name" class="img-fluid">
+                                        }
+                                        else
+                                        {
+                                            <img src="~/assets/img/restaurant/default.webp" alt="@special.Name" class="img-fluid">
+                                        }
+                                        <div class="menu-item-badges">
+                                            <span class="badge-special">Đặc Biệt</span>
+                                            @if (special.TagList.Any())
+                                            {
+                                                foreach (var tag in special.TagList.Take(2))
+                                                {
+                                                    var badgeClass = tag.ToLower() switch
+                                                    {
+                                                        "hải sản" => "badge-vegan",
+                                                        "premium" => "badge-spicy",
+                                                        "đặc biệt" => "badge-special",
+                                                        _ => "badge-vegan"
+                                                    };
+                                                    <span class="@badgeClass">@tag</span>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="menu-item-content">
+                                        <h4>@special.Name</h4>
+                                        <p>@special.Description</p>
+                                        <div class="menu-item-price">@special.PriceFormatted</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 600,
+                easing: 'ease-in-out',
+                once: true,
+                mirror: false
+            });
+        }
+
+        // Initialize Isotope
+        var menuContainer = document.querySelector('.menu-container');
+        if (menuContainer && typeof Isotope !== 'undefined') {
+            var iso = new Isotope(menuContainer, {
+                itemSelector: '.isotope-item',
+                layoutMode: 'masonry',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                }
+            });
+
+            // Filter functionality
+            var filterButtons = document.querySelectorAll('.isotope-filters li');
+            filterButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(function(btn) {
+                        btn.classList.remove('filter-active');
+                    });
+                    // Add active class to clicked button
+                    this.classList.add('filter-active');
+
+                    // Filter items
+                    var filterValue = this.getAttribute('data-filter');
+                    iso.arrange({
+                        filter: filterValue
+                    });
+                });
+            });
+        }
+    });
+</script>
+}
+
+<style>
+    .menu-img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .menu-item {
+        transition: transform 0.3s ease;
+    }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+    .menu-tag {
+        background: #cda45e;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 3px;
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .price {
+        color: #cda45e;
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .isotope-filters li {
+        cursor: pointer;
+        padding: 8px 20px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+        .isotope-filters li:hover,
+        .isotope-filters li.filter-active {
+            background: #cda45e;
+            color: white;
+        }
+
+    .download-menu {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #cda45e;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+        .download-menu:hover {
+            background: #b8935a;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+    .specials-badge {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .specials-badge span {
+            background: #1a1814;
+            color: #cda45e;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+    .special-item {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+        .special-item:hover {
+            transform: translateY(-10px);
+        }
+
+    .menu-item-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .menu-item-img img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+    .special-item:hover .menu-item-img img {
+        transform: scale(1.1);
+    }
+
+    .menu-item-badges {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+        .menu-item-badges span {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+    .badge-special {
+        background: #cda45e;
+        color: white;
+    }
+
+    .badge-vegan {
+        background: #5cb85c;
+        color: white;
+    }
+
+    .badge-spicy {
+        background: #d9534f;
+        color: white;
+    }
+
+    .menu-item-content {
+        padding: 25px;
+    }
+
+        .menu-item-content h4 {
+            color: #1a1814;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .menu-item-content p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+    .menu-item-price {
+        color: #cda45e;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .years-badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+        .years-badge .number {
+            display: block;
+            font-size: 36px;
+            font-weight: bold;
+            color: #cda45e;
+            line-height: 1;
+        }
+
+        .years-badge .text {
+            display: block;
+            font-size: 12px;
+            color: #666;
+        }
+
+    .feature-item {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+        .feature-item i {
+            font-size: 36px;
+            color: #cda45e;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+    .chef-name {
+        font-weight: bold;
+        color: #1a1814;
+        margin-bottom: 10px;
+    }
+</style>

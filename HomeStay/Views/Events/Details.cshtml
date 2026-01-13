@@ -1,0 +1,178 @@
+﻿@model HomeStay.Models.Event
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Sự kiện</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Event Header -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-0">
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <img src="~/img/hotel/event-1.webp" class="img-fluid rounded-top w-100" alt="@Model.Title" style="max-height: 500px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-light rounded-top d-flex align-items-center justify-content-center" style="height: 400px;">
+                            <i class="fas fa-calendar-alt fa-5x text-muted"></i>
+                        </div>
+                    }
+
+                    <div class="p-4">
+                        <h1 class="display-5 fw-bold mb-3">@Model.Title</h1>
+
+                        <!-- Event Meta Info -->
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="far fa-calendar me-2"></i>
+                                <span>@Model.EventDate</span>
+                            </div>
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="far fa-clock me-2"></i>
+                                <span>@Model.StartTime?.ToString(@"hh\:mm") - @Model.EndTime?.ToString(@"hh\:mm")</span>
+                            </div>
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                <span>@Model.Location</span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Event Description -->
+                        <div class="event-description">
+                            <h4 class="mb-3">Mô tả sự kiện</h4>
+                            <div class="text-muted" style="line-height: 1.8; white-space: pre-line;">
+                                @Model.Description
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Info Card -->
+            <div class="card border-0 shadow-sm mb-4 sticky-top" style="top: 20px; position: static;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin nhanh</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="far fa-calendar-alt text-primary fa-lg"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Ngày diễn ra</h6>
+                                    <p class="text-muted mb-0">@Model.EventDate</p>
+                                </div>
+                            </div>
+                        </li>
+                        <hr>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="far fa-clock text-primary fa-lg"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Thời gian</h6>
+                                    <p class="text-muted mb-0">
+                                        @Model.StartTime?.ToString(@"hh\:mm") - @Model.EndTime?.ToString(@"hh\:mm")
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                        <hr>
+                        <li class="mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt text-primary fa-lg"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Địa điểm</h6>
+                                    <p class="text-muted mb-0">@Model.Location</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-primary btn-lg" type="button">
+                            <i class="fas fa-ticket-alt me-2"></i>Đăng ký tham gia
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="far fa-heart me-2"></i>Lưu sự kiện
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="fas fa-share-alt me-2"></i>Chia sẻ</h5>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary flex-fill">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-info flex-fill">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-danger flex-fill">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-success flex-fill">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sự kiện
+        </a>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .event-description {
+        font-size: 1.05rem;
+    }
+
+    .card {
+        transition: transform 0.2s;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    
+</style>
+

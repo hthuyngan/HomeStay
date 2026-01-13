@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeStay.Models;
@@ -47,6 +46,8 @@ public partial class HomestayContext : DbContext
 
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
+    public virtual DbSet<MenuCategory> MenuCategories { get; set; }
+    public virtual DbSet<MenuItem> MenuItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,6 +75,55 @@ public partial class HomestayContext : DbContext
             entity.Property(e => e.Icon).HasMaxLength(100);
             entity.Property(e => e.Image).HasMaxLength(255);
             entity.Property(e => e.OpenTime).HasMaxLength(100);
+        });
+        modelBuilder.Entity<MenuCategory>(entity =>
+        {
+            entity.HasKey(e => e.CategoryId);
+            entity.Property(e => e.CategoryName)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.CategoryNameEn)
+                .HasMaxLength(100);
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true);
+        });
+
+        // Cấu hình cho MenuItem
+        modelBuilder.Entity<MenuItem>(entity =>
+        {
+            entity.HasKey(e => e.MenuItemId);
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)")
+                .IsRequired();
+
+            entity.Property(e => e.Image)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.Tags)
+                .HasMaxLength(200);
+
+            entity.Property(e => e.IsSpecial)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+
+            // Cấu hình relationship
+            entity.HasOne(e => e.Category)
+                  .WithMany(c => c.MenuItems)
+                  .HasForeignKey(e => e.CategoryId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Booking>(entity =>
@@ -108,16 +158,45 @@ public partial class HomestayContext : DbContext
             entity.Property(e => e.Message).HasMaxLength(500);
             entity.Property(e => e.Phone).HasMaxLength(20);
         });
-
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.EventId).HasName("PK__Events__7944C8707E5668D1");
+            entity.HasKey(e => e.EventId)
+                  .HasName("PK__Events__7944C8707E5668D1");
 
-            entity.Property(e => e.EventId).HasColumnName("EventID");
-            entity.Property(e => e.Description).HasMaxLength(255);
-            entity.Property(e => e.Image).HasMaxLength(255);
-            entity.Property(e => e.Title).HasMaxLength(150);
+            entity.ToTable("Events");
+
+            entity.Property(e => e.EventId)
+                  .HasColumnName("EventID");
+
+            entity.Property(e => e.Title)
+                  .HasMaxLength(150)
+                  .IsRequired();
+
+            entity.Property(e => e.Description)
+                  .HasColumnType("nvarchar(max)");
+
+            entity.Property(e => e.Image)
+                  .HasMaxLength(255);
+
+            entity.Property(e => e.Location)
+                  .HasMaxLength(255);
+
+            entity.Property(e => e.EventDate)
+                  .HasColumnType("date");
+
+            entity.Property(e => e.StartTime)
+                  .HasColumnType("time");
+
+            entity.Property(e => e.EndTime)
+                  .HasColumnType("time");
+
+            entity.Property(e => e.IsActive)
+                  .HasDefaultValue(true);
+
+            entity.Property(e => e.CreatedAt)
+                  .HasDefaultValueSql("GETDATE()");
         });
+
 
         modelBuilder.Entity<Gallery>(entity =>
         {
